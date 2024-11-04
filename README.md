@@ -1,27 +1,53 @@
 # Summer 2024 CS 3200 Project Template Repository
 
-## About
+This repo is a template for your semester project.  It includes most of the infrastructure setup (containers) and sample code and data throughout.  Explore it fully and ask questions.
 
-This example project explores some features of Streamlit & Flask to build a comprehensive web app for your project.  You won't necessarily have to use all of the features in this example in your course project 
+## Prerequisites
+
+- A GitHub Account
+- A terminal-based or GUI git client **TODO - directions for setting up keys for terminal git access**
+- VSCode with the Python Plugin
+- A distrobution of Python running on your laptop (Choco (for Windows), brew (for Macs), miniconda, Anaconda, etc). 
 
 ## Current Project Components
 
-Currently, there are three major components:
-- Streamlit App (in the `./app` directory)
-- Flask REST api (in the `./api` directory)
-- MySQL setup files (in the `./database-files` directory)
+Currently, there are three major components which will each run in their own Docker Containers:
 
-## Getting Started for Personal Exploration
-1. Clone the repo to your computer. 
+- Streamlit App in the `./app` directory
+- Flask REST api in the `./api` directory
+- SQL files for your data model and data base in the `./database-files` directory
+
+## Suggestion for Learning the Project Code Base
+
+If you are not familiar with web app development, this code base might be confusing. You will probably want two versions though:
+1. One version for you to explore, try things, break things, etc. We'll call this your **Personal Repo** 
+1. One version of the repo that your team will share.  We'll call this the **Team Repo**. 
+
+
+**TODO - deal with the .env file thing**
+
+### Setting Up Your Personal Repo
+
+1. In GitHub, click the **fork** button in the upper right corner of the repo screen. 
+1. When prompted, give the new repo a unique name, perhaps including your last name and the word 'personal'. 
+1. Once the fork has been created, clone YOUR forked version of the repo to your computer. 
 1. Set up the `.env` file in the `api` folder based on the `.env.template` file.
 1. Start the docker containers. 
 
-## Getting Started For Team Project
-1. Each team member should make a GitHub account if you don't already have one.  This should be for the public GitHub, not Khoury's enterprise server. 
-1. One team member should fork this repository. They will be the repo owner. 
-1. Add your team members as Collaborators on the repository.  You can find Collaborators under the Settings tab in the repository.
-1. Each team member needs to accept the invitation to collaborate
-1. Each team member (including the repo owner) needs to clone the repository to their laptops. 
+### Setting Up Your Team Repo 
+
+Before you start: As a team, one person needs to assume the role of *Team Project Repo Owner*. 
+
+1. The Team Project Repo Owner needs to fork this template repo into their own GitHub account **and give the repo a name consistent with your project's name**.  If you're worried that the repo is public, don't.  Every team is doing a different project. 
+1. In the newly forked team repo, the Team Project Repo Owner should go to the **Settings** tab, choose **Collaborators and Teams** on the left-side panel. Add each of your team members to the repository with Write access. 
+1. Each of the other team members will receive an invitation to join.  Obviously accept the invite. 
+1. Once that process is complete, each team member, including the repo owner, should clone the Team's Repo to their local machines (in a different location than your Personal Project Repo).  
+
+## Starting the Containers
+
+**TODO Write this section**
+
+
 
 ## Handling User Role Access and Control
 
