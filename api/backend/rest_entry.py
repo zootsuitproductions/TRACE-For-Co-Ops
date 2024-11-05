@@ -11,6 +11,10 @@ def create_app():
     app = Flask(__name__)
 
     # Load environment variables
+    # This function reads all the values from inside
+    # the .env file (in the parent folder) so they
+    # are available in this file.  See the MySQL setup 
+    # commands below to see how they're being used.
     load_dotenv()
 
     # secret key that will be used for securely signing the session 
