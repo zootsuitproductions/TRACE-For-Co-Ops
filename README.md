@@ -1,11 +1,11 @@
-# Summer 2024 CS 3200 Project Template Repository
+# Fall 2024 CS 3200 Project Template Repository
 
 This repo is a template for your semester project.  It includes most of the infrastructure setup (containers) and sample code and data throughout.  Explore it fully and ask questions.
 
 ## Prerequisites
 
 - A GitHub Account
-- A terminal-based or GUI git client **TODO - directions for setting up keys for terminal git access**
+- A terminal-based or GUI git client
 - VSCode with the Python Plugin
 - A distrobution of Python running on your laptop (Choco (for Windows), brew (for Macs), miniconda, Anaconda, etc). 
 
@@ -24,8 +24,6 @@ If you are not familiar with web app development, this code base might be confus
 1. One version of the repo that your team will share.  We'll call this the **Team Repo**. 
 
 
-**TODO - deal with the .env file thing**
-
 ### Setting Up Your Personal Repo
 
 1. In GitHub, click the **fork** button in the upper right corner of the repo screen. 
@@ -43,10 +41,12 @@ Before you start: As a team, one person needs to assume the role of *Team Projec
 1. Each of the other team members will receive an invitation to join.  Obviously accept the invite. 
 1. Once that process is complete, each team member, including the repo owner, should clone the Team's Repo to their local machines (in a different location than your Personal Project Repo).  
 
-## Starting the Containers
+## Controlling the Containers
 
-**TODO Write this section**
-
+- `docker compose up -d` to start all the containers in the background
+- `docker compose down` to shutdown and delete the containers
+- `docker compose up db -d` only start the database container (replace db with the other services as needed)
+- `docker compose stop` to "turn off" the containers but not delete them. 
 
 
 ## Handling User Role Access and Control
