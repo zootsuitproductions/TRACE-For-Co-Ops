@@ -43,7 +43,7 @@ def create_app():
     app.register_blueprint(simple_routes)
     app.register_blueprint(customers,   url_prefix='/c')
     app.register_blueprint(reviews,    url_prefix='/r')
-    app.register_blueprint(feedback, url_prefix='/f')
+    app.register_blueprint(feedback,    url_prefix='/f')
     # Don't forget to return the app object
     return app
 

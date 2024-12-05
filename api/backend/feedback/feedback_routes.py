@@ -17,69 +17,64 @@ feedback = Blueprint('feedback', __name__)
 
 
 #------------------------------------------------------------
-# Get all customers from the system
+# Get all feedback from the system
 @feedback.route('/feedback', methods=['GET'])
 def get_feedback():
-    cursor = db.get_db().cursor()
-    cursor.execute('''
-        SELECT feedbackID, userID, timestamp, header, content, status
-        FROM Feedback;
-    ''')
+    try:
+        # カーソルの管理
+        with db.get_db().cursor() as cursor:
+            cursor.execute('''
+                SELECT feedbackID, userID, timestamp, header, content, status
+                FROM Feedback;
+            ''')
+            theData = cursor.fetchall()
+
+        # レスポンスを返す
+        the_response = make_response(jsonify(theData))
+        the_response.status_code = 200
+        return the_response
+
+    except Exception as e:
+        current_app.logger.error(f"Error fetching feedback: {e}")
+        return {"error": "An error occurred while fetching feedback"}, 500
+
+
+@feedback.route('/feedback', methods=['PUT'])
+def update_status():
+    current_app.logger.info('PUT /feedback route')
+    try:
+        feedback_info = request.json
+
+        if 'feedbackID' not in feedback_info or 'status' not in feedback_info:
+            return {'error': 'Missing feedbackID or status'}, 400
+
+        status = feedback_info['status']
+        feedback_id = feedback_info['feedbackID']
+        
+        
+        query = '''
+        UPDATE Feedback
+        SET status = %s
+        WHERE feedbackID = %s;
+        '''
+        
+        
+        data = (status, feedback_id)
+
+        cursor = db.get_db().cursor()
+        cursor.execute(query, data)
+        db.get_db().commit()
+
+        return {'message': 'Feedback status updated successfully'}, 200
+
+    except KeyError as e:
+        current_app.logger.error(f"Missing key in request JSON: {str(e)}")
+        return {'error': f'Missing key: {str(e)}'}, 400
+    except Exception as e:
+        current_app.logger.error(f"Error updating feedback: {str(e)}")
+        return {'error': 'An error occurred while updating feedback status'}, 500
+    finally:
+        if 'cursor' in locals() and cursor:
+            cursor.close()
     
-    theData = cursor.fetchall()
-    
-    the_response = make_response(jsonify(theData))
-    the_response.status_code = 200
-    return the_response
 
-'''
-#------------------------------------------------------------
-# Update customer info for customer with particular userID
-#   Notice the manner of constructing the query.
-@customers.route('/customers', methods=['PUT'])
-def update_customer():
-    current_app.logger.info('PUT /customers route')
-    cust_info = request.json
-    cust_id = cust_info['id']
-    first = cust_info['first_name']
-    last = cust_info['last_name']
-    company = cust_info['company']
-
-    query = 'UPDATE customers SET first_name = %s, last_name = %s, company = %s where id = %s'
-    data = (first, last, company, cust_id)
-    cursor = db.get_db().cursor()
-    r = cursor.execute(query, data)
-    db.get_db().commit()
-    return 'customer updated!'
-
-#------------------------------------------------------------
-# Get customer detail for customer with particular userID
-#   Notice the manner of constructing the query. 
-@customers.route('/customers/<userID>', methods=['GET'])
-def get_customer(userID):
-    current_app.logger.info('GET /customers/<userID> route')
-    cursor = db.get_db().cursor()
-    cursor.execute('SELECT id, first_name, last_name FROM customers WHERE id = {0}'.format(userID))
-    
-    theData = cursor.fetchall()
-    
-    the_response = make_response(jsonify(theData))
-    the_response.status_code = 200
-    return the_response
-
-#------------------------------------------------------------
-# Makes use of the very simple ML model in to predict a value
-# and returns it to the user
-@customers.route('/prediction/<var01>/<var02>', methods=['GET'])
-def predict_value(var01, var02):
-    current_app.logger.info(f'var01 = {var01}')
-    current_app.logger.info(f'var02 = {var02}')
-
-    returnVal = predict(var01, var02)
-    return_dict = {'result': returnVal}
-
-    the_response = make_response(jsonify(return_dict))
-    the_response.status_code = 200
-    the_response.mimetype = 'application/json'
-    return the_response
-'''
