@@ -1,23 +1,7 @@
--- Create the database
-CREATE DATABASE IF NOT EXISTS CoopPlatform;
-
 
 -- Use the newly created database
 USE CoopPlatform;
 
-
--- Create User table
-CREATE TABLE User (
-   userID INT AUTO_INCREMENT PRIMARY KEY,
-   firstName VARCHAR(50),
-   lastName VARCHAR(50),
-   email VARCHAR(100) UNIQUE,
-   major VARCHAR(50),
-   skills TEXT,
-   interests TEXT,
-   isAdmin BOOLEAN DEFAULT FALSE,
-   isAnalyst BOOLEAN DEFAULT FALSE
-);
 
 INSERT INTO User (firstName, lastName, email, major, skills, interests, isAdmin, isAnalyst) VALUES
 ('Alice', 'Smith', 'alice.smith@example.com', 'Computer Science', 'Java, Python', 'AI, Robotics', FALSE, TRUE),
@@ -55,14 +39,6 @@ INSERT INTO User (firstName, lastName, email, major, skills, interests, isAdmin,
 ('Grace', 'Hopper', 'grace.hopper@example.com', 'Computer Science', 'Programming, Algorithms', 'Innovation, Women in Tech', TRUE, TRUE),
 ('Harvey', 'Specter', 'harvey.specter@example.com', 'Law', 'Litigation, Negotiation', 'Corporate Law, Strategy', FALSE, FALSE);
 
-
--- Create Companies table
-CREATE TABLE Companies (
-   companyID INT AUTO_INCREMENT PRIMARY KEY,
-   name VARCHAR(100),
-   description TEXT
-);
-
 INSERT INTO Companies (name, description) VALUES
 ('TechNova Inc.', 'A leading company in AI and machine learning solutions.'),
 ('GreenFields Ltd.', 'Specializing in sustainable agriculture and organic farming techniques.'),
@@ -96,11 +72,7 @@ INSERT INTO Companies (name, description) VALUES
 ('QuantumLeap Solutions', 'Researching quantum computing and its applications.');
 
 
--- Create Industries table
-CREATE TABLE Industries (
-   industryID INT AUTO_INCREMENT PRIMARY KEY,
-   name VARCHAR(100)
-);
+
 
 INSERT INTO Industries (name) VALUES
 ('Information Technology'),
@@ -134,14 +106,6 @@ INSERT INTO Industries (name) VALUES
 ('Pharmaceuticals'),
 ('Marine and Aquatic Technologies');
 
--- Create the relationship table for Industries and Companies
-CREATE TABLE CompanyIndustry (
-   companyID INT,
-   industryID INT,
-   PRIMARY KEY (companyID, industryID),
-   FOREIGN KEY (companyID) REFERENCES Companies(companyID),
-   FOREIGN KEY (industryID) REFERENCES Industries(industryID)
-);
 
 INSERT INTO CompanyIndustry (companyID, industryID) VALUES
 (1, 1), -- TechNova Inc. -> Information Technology
@@ -183,18 +147,6 @@ INSERT INTO CompanyIndustry (companyID, industryID) VALUES
 (28, 24), -- ArtisanCrafts Co. -> Arts and Crafts
 (29, 25), -- BrightPath Logistics -> E-commerce
 (30, 26); -- QuantumLeap Solutions -> Quantum Computing
-
-
--- Create Location table
-CREATE TABLE Location (
-   locationID INT AUTO_INCREMENT PRIMARY KEY,
-   companyID INT,
-   address TEXT,
-   city VARCHAR(100),
-   state_province VARCHAR(100),
-   country VARCHAR(100),
-   FOREIGN KEY (companyID) REFERENCES Companies(companyID)
-);
 
 INSERT INTO Location (companyID, address, city, state_province, country) VALUES
 (1, '123 Innovation Blvd', 'San Francisco', 'California', 'USA'),
@@ -243,19 +195,6 @@ INSERT INTO Location (companyID, address, city, state_province, country) VALUES
 (14, '414 Biotech Blvd', 'Tel Aviv', 'Tel Aviv District', 'Israel'),
 (5, '425 Logistics Lane', 'Dubai', 'Dubai', 'United Arab Emirates');
 
-
--- Create Role table
-CREATE TABLE Role (
-   roleID INT AUTO_INCREMENT PRIMARY KEY,
-   companyID INT,
-   locationID INT,
-   roleName VARCHAR(100),
-   description TEXT,
-   skillsRequired TEXT,
-   FOREIGN KEY (companyID) REFERENCES Companies(companyID),
-   FOREIGN KEY (locationID) REFERENCES Location(locationID)
-);
-
 INSERT INTO Role (companyID, locationID, roleName, description, skillsRequired) VALUES
 (1, 1, 'Machine Learning Engineer', 'Design and implement machine learning models for real-world applications.', 'Python, TensorFlow, Data Analysis'),
 (2, 2, 'Sustainability Analyst', 'Analyze and optimize sustainable farming practices.', 'Data Analysis, Agricultural Science'),
@@ -287,25 +226,6 @@ INSERT INTO Role (companyID, locationID, roleName, description, skillsRequired) 
 (28, 28, 'Artisan Product Designer', 'Design and promote handcrafted artisan products.', 'Creativity, Marketing'),
 (29, 29, 'E-commerce Operations Manager', 'Manage e-commerce logistics and operations.', 'Inventory Management, Analytics'),
 (30, 30, 'Quantum Computing Researcher', 'Research and develop quantum computing applications.', 'Quantum Mechanics, Algorithms');
-
-
--- Create Reviews table
-CREATE TABLE Reviews (
-   reviewID INT AUTO_INCREMENT PRIMARY KEY,
-   userID INT,
-   roleID INT,
-   createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-   updatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
-   publishedAt DATETIME,
-   reviewType VARCHAR(50),
-   heading VARCHAR(100),
-   content TEXT,
-   views INT DEFAULT 0,
-   likes INT DEFAULT 0,
-   isFlagged BOOLEAN DEFAULT FALSE,
-   FOREIGN KEY (userID) REFERENCES User(userID),
-   FOREIGN KEY (roleID) REFERENCES Role(roleID)
-);
 
 INSERT INTO Reviews (userID, roleID, publishedAt, reviewType, heading, content, views, likes, isFlagged) VALUES
 (1, 1, '2024-01-01 10:00:00', 'Experience', 'Great Experience as an ML Engineer', 'I had a fantastic experience working as a Machine Learning Engineer at TechNova Inc. Learned a lot about AI.', 150, 35, FALSE),
@@ -340,22 +260,6 @@ INSERT INTO Reviews (userID, roleID, publishedAt, reviewType, heading, content, 
 (30, 30, '2024-05-20 15:00:00', 'Feedback', 'Quantum Computing Innovations', 'Fascinating projects but steep learning curve.', 145, 28, FALSE);
 
 
--- Create Comments table
-CREATE TABLE Comments (
-   commentID INT AUTO_INCREMENT PRIMARY KEY,
-   reviewID INT,
-   userID INT,
-   parentCommentID INT DEFAULT NULL,
-   createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-   updatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
-   content TEXT,
-   likes INT DEFAULT 0,
-   isFlagged BOOLEAN DEFAULT FALSE,
-   FOREIGN KEY (reviewID) REFERENCES Reviews(reviewID),
-   FOREIGN KEY (userID) REFERENCES User(userID),
-   FOREIGN KEY (parentCommentID) REFERENCES Comments(commentID)
-);
-
 INSERT INTO Comments (reviewID, userID, parentCommentID, content, likes, isFlagged) VALUES
 (1, 2, NULL, 'This sounds like a fantastic experience! Thanks for sharing.', 10, FALSE),
 (1, 3, 1, 'Absolutely agree! I had a similar experience.', 5, FALSE),
@@ -388,11 +292,6 @@ INSERT INTO Comments (reviewID, userID, parentCommentID, content, likes, isFlagg
 (20, 27, NULL, 'Gourmet food development sounds interesting! How creative was it?', 8, FALSE),
 (21, 28, NULL, 'Interior design is so rewarding. What was your favorite project?', 13, FALSE);
 
--- Create Badges table
-CREATE TABLE Badges (
-   badgeID INT AUTO_INCREMENT PRIMARY KEY,
-   badgeName VARCHAR(50)
-);
 
 INSERT INTO Badges (badgeName) VALUES
 ('Top Contributor'),
@@ -411,15 +310,6 @@ INSERT INTO Badges (badgeName) VALUES
 ('Leadership Star'),
 ('Data Enthusiast');
 
-
--- Create the relationship table for User and Badges
-CREATE TABLE UserBadges (
-   userID INT,
-   badgeID INT,
-   PRIMARY KEY (userID, badgeID),
-   FOREIGN KEY (userID) REFERENCES User(userID),
-   FOREIGN KEY (badgeID) REFERENCES Badges(badgeID)
-);
 
 INSERT INTO UserBadges (userID, badgeID) VALUES
 (1, 1), -- User 1: Top Contributor
@@ -454,15 +344,6 @@ INSERT INTO UserBadges (userID, badgeID) VALUES
 (26, 2); -- User 26: Expert Reviewer
 
 
--- Create Feedback table
-CREATE TABLE Feedback (
-   feedbackID INT AUTO_INCREMENT PRIMARY KEY,
-   userID INT,
-   timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-   header VARCHAR(100),
-   content TEXT,
-   FOREIGN KEY (userID) REFERENCES User(userID)
-);
 
 INSERT INTO Feedback (userID, header, content) VALUES
 (1, 'Platform Improvement Suggestion', 'It would be great to have a dark mode feature for the platform.'),
