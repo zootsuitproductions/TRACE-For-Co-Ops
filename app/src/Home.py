@@ -72,7 +72,7 @@ if st.button('Act as System Administrator',
     st.session_state['role'] = 'administrator'
     st.session_state['first_name'] = 'SysAdmin'
     logger.info("Logging in as System Administrator")
-    st.switch_page('pages/300_System_Administrator.py')
+    st.switch_page('pages/300_System_Administrator_Home.py')
 
 
 if st.button('Act as Annalise, an Analyist of Site Performance', 
