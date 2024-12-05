@@ -1,5 +1,3 @@
-
-
 -- Create the database
 CREATE DATABASE IF NOT EXISTS CoopPlatform;
 
