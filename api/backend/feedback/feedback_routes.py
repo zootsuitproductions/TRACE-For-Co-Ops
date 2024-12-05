@@ -22,7 +22,7 @@ feedback = Blueprint('feedback', __name__)
 def get_feedback():
     cursor = db.get_db().cursor()
     cursor.execute('''
-        SELECT userID, timestamp, header, content
+        SELECT userID, timestamp, header, content, status
         FROM Feedback;
     ''')
     
