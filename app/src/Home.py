@@ -42,7 +42,7 @@ st.write('### HI! As which user would you like to log in?')
 # functionality, we put a button on the screen that the user 
 # can click to MIMIC logging in as that mock user. 
 
-if st.button("Act as Sebastian, a Student Co Op Searcher", 
+if st.button("Act as Sebastian, a Student Co-Op Searcher", 
             type = 'primary', 
             use_container_width=True):
     # when user clicks the button, they are now considered authenticated
@@ -71,7 +71,8 @@ if st.button('Act as System Administrator',
     st.session_state['authenticated'] = True
     st.session_state['role'] = 'administrator'
     st.session_state['first_name'] = 'SysAdmin'
-    st.switch_page('pages/20_Admin_Home.py')
+    logger.info("Logging in as System Administrator")
+    st.switch_page('pages/300_System_Administrator.py')
 
 
 if st.button('Act as Annalise, an Analyist of Site Performance', 
