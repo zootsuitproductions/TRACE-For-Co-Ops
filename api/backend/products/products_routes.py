@@ -21,12 +21,22 @@ products = Blueprint('products', __name__)
 @products.route('/products', methods=['GET'])
 def get_products():
     query = '''
-        SELECT  id, 
-                product_code, 
-                product_name, 
-                list_price, 
-                category 
-        FROM products
+        SELECT 
+    r.reviewID,
+    r.roleID,
+    r.createdAt,
+    r.updatedAt,
+    r.publishedAt,
+    r.reviewType,
+    r.heading,
+    r.content,
+    r.views,
+    r.likes,
+    r.isFlagged
+FROM 
+    Reviews r
+WHERE 
+    r.userID = ;
     '''
     
     # get a cursor object from the database
@@ -53,16 +63,26 @@ def get_products():
 # notice that the route takes <id> and then you see id
 # as a parameter to the function.  This is one way to send 
 # parameterized information into the route handler.
-@products.route('/product/<id>', methods=['GET'])
+@products.route('/reviewsByUser/<id>', methods=['GET'])
 def get_product_detail (id):
 
-    query = f'''SELECT id, 
-                       product_name, 
-                       description, 
-                       list_price, 
-                       category 
-                FROM products 
-                WHERE id = {str(id)}
+    query = f'''
+        SELECT 
+    r.reviewID,
+    r.roleID,
+    r.createdAt,
+    r.updatedAt,
+    r.publishedAt,
+    r.reviewType,
+    r.heading,
+    r.content,
+    r.views,
+    r.likes,
+    r.isFlagged
+FROM 
+    Reviews r
+WHERE 
+    r.userID = {str(id)};
     '''
     
     # logging the query for debugging purposes.  
