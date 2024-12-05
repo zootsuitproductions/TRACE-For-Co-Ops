@@ -130,6 +130,7 @@ CREATE TABLE IF NOT EXISTS Feedback (
    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
    header VARCHAR(100),
    content TEXT,
+   status VARCHAR(100) DEFAULT 'In Progress',
    FOREIGN KEY (userID) REFERENCES User(userID)
 );
 
