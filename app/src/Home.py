@@ -61,9 +61,10 @@ if st.button('Act as Riley, a student Co-Op Reviewer',
             type = 'primary', 
             use_container_width=True):
     st.session_state['authenticated'] = True
-    st.session_state['role'] = 'usaid_worker'
-    st.session_state['first_name'] = 'Mohammad'
-    st.switch_page('pages/100_CoOp_Searcher_Home.py')
+    st.session_state['role'] = 'Co-Op reviewer'
+    st.session_state['id'] = '1'
+    st.session_state['first_name'] = 'Riley'
+    st.switch_page('pages/200_CoOp_Reviewer_Home.py')
 
 if st.button('Act as System Administrator', 
             type = 'primary', 

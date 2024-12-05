@@ -13,20 +13,70 @@ from backend.db_connection import db
 #------------------------------------------------------------
 # Create a new Blueprint object, which is a collection of 
 # routes.
-products = Blueprint('products', __name__)
+reviews = Blueprint('reviews', __name__)
+
+
+# ------------------------------------------------------------
+# get product information about a specific product
+# notice that the route takes <id> and then you see id
+# as a parameter to the function.  This is one way to send 
+# parameterized information into the route handler.
+@reviews.route('/reviewsByUser/<id>', methods=['GET'])
+def get_product_detail (id):
+
+    query = f'''
+        SELECT 
+    r.reviewID,
+    r.roleID,
+    r.createdAt,
+    r.updatedAt,
+    r.publishedAt,
+    r.reviewType,
+    r.heading,
+    r.content,
+    r.views,
+    r.likes,
+    r.isFlagged
+FROM 
+    Reviews r
+WHERE 
+    r.userID = {str(id)};
+    '''
+    
+    # get the database connection, execute the query, and 
+    # fetch the results as a Python Dictionary
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
 
 #------------------------------------------------------------
 # Get all the products from the database, package them up,
 # and return them to the client
-@products.route('/products', methods=['GET'])
+@reviews.route('/products', methods=['GET'])
 def get_products():
     query = '''
-        SELECT  id, 
-                product_code, 
-                product_name, 
-                list_price, 
-                category 
-        FROM products
+        SELECT 
+    r.reviewID,
+    r.roleID,
+    r.createdAt,
+    r.updatedAt,
+    r.publishedAt,
+    r.reviewType,
+    r.heading,
+    r.content,
+    r.views,
+    r.likes,
+    r.isFlagged
+FROM 
+    Reviews r
+WHERE 
+    r.userID = ;
     '''
     
     # get a cursor object from the database
@@ -48,46 +98,11 @@ def get_products():
     # send the response back to the client
     return response
 
-# ------------------------------------------------------------
-# get product information about a specific product
-# notice that the route takes <id> and then you see id
-# as a parameter to the function.  This is one way to send 
-# parameterized information into the route handler.
-@products.route('/product/<id>', methods=['GET'])
-def get_product_detail (id):
 
-    query = f'''SELECT id, 
-                       product_name, 
-                       description, 
-                       list_price, 
-                       category 
-                FROM products 
-                WHERE id = {str(id)}
-    '''
-    
-    # logging the query for debugging purposes.  
-    # The output will appear in the Docker logs output
-    # This line has nothing to do with actually executing the query...
-    # It is only for debugging purposes. 
-    current_app.logger.info(f'GET /product/<id> query={query}')
-
-    # get the database connection, execute the query, and 
-    # fetch the results as a Python Dictionary
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-    
-    # Another example of logging for debugging purposes.
-    # You can see if the data you're getting back is what you expect. 
-    current_app.logger.info(f'GET /product/<id> Result of query = {theData}')
-    
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    return response
     
 # ------------------------------------------------------------
 # Get the top 5 most expensive products from the database
-@products.route('/mostExpensive')
+@reviews.route('/mostExpensive')
 def get_most_pop_products():
 
     query = '''
@@ -112,7 +127,7 @@ def get_most_pop_products():
 # ------------------------------------------------------------
 # Route to get the 10 most expensive items from the 
 # database.
-@products.route('/tenMostExpensive', methods=['GET'])
+@reviews.route('/tenMostExpensive', methods=['GET'])
 def get_10_most_expensive_products():
     
     query = '''
@@ -139,7 +154,7 @@ def get_10_most_expensive_products():
 # This is a POST route to add a new product.
 # Remember, we are using POST routes to create new entries
 # in the database. 
-@products.route('/product', methods=['POST'])
+@reviews.route('/product', methods=['POST'])
 def add_new_product():
     
     # In a POST request, there is a 
@@ -180,7 +195,7 @@ def add_new_product():
 
 # ------------------------------------------------------------
 ### Get all product categories
-@products.route('/categories', methods = ['GET'])
+@reviews.route('/categories', methods = ['GET'])
 def get_all_categories():
     query = '''
         SELECT DISTINCT category AS label, category as value
@@ -200,7 +215,7 @@ def get_all_categories():
 # ------------------------------------------------------------
 # This is a stubbed route to update a product in the catalog
 # The SQL query would be an UPDATE. 
-@products.route('/product', methods = ['PUT'])
+@reviews.route('/product', methods = ['PUT'])
 def update_product():
     product_info = request.json
     current_app.logger.info(product_info)
