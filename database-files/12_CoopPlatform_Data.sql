@@ -1,4 +1,3 @@
-
 -- Use the newly created database
 USE CoopPlatform;
 
@@ -381,6 +380,7 @@ INSERT INTO Feedback (userID, header, content) VALUES
 (3, 'More Badge Categories', 'The badge system could include categories for mentorship and learning.'),
 (4, 'Mentorship Program', 'A mentorship program linking experienced users with newcomers would be valuable.'),
 (5, 'Content Curation', 'Curating high-quality reviews or featuring top contributors could inspire others.');
+
 
 
 
