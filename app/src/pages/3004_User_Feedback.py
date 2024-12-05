@@ -76,10 +76,6 @@ st.subheader("Feedback List")
 st.dataframe(filtered_feedback_df)
 
 
-
-
-
-
 # Feedback update form
 st.subheader("Update Feedback Status")
 input_id = st.text_input("Enter Feedback ID")
@@ -89,18 +85,40 @@ new_status = st.radio(
     index=0,
 )
 
+
 if st.button("Update Status"):
     # Validate ID
-    if input_id.isdigit() and int(input_id) in st.session_state.feedback_df["ID"].values:
+    if input_id.isdigit() and int(input_id) in st.session_state.feedback_df["feedbackID"].values:
         selected_id = int(input_id)
-        # Update the status of the selected feedback
+          
+        # Update the status of the selected feedback in the current dataframe
         st.session_state.feedback_df.loc[
-            st.session_state.feedback_df["ID"] == selected_id, "Status"
+            st.session_state.feedback_df["feedbackID"] == selected_id, "status"
         ] = new_status
         st.success(f"Feedback ID {selected_id} status updated to '{new_status}'!")
+        
+        filtered_feedback_df.loc[filtered_feedback_df["feedbackID"] == int(input_id), "status"] = new_status
+        # Update the status of the selected feedback in the SQL database
+      
+        # data which is used for update
+        data = {
+            "feedbackID": selected_id, 
+            "status": new_status 
+        }
+
+        response = requests.put("http://api:4000/f/feedback", json=data)
+
+        # reflect the response
+        if response.status_code == 200:
+            print("Success:", response.json())
+        else:
+            print("Error:", response.status_code, response.json())
+            
     else:
         st.error("Please enter a valid Feedback ID.")
 
 # Display updated feedback table
 st.subheader("Updated Feedback List")
+
 st.dataframe(filtered_feedback_df)
+
