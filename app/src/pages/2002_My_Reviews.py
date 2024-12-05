@@ -19,6 +19,6 @@ st.header('My Reviews')
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
 
-results = requests.get(f'http://api:4000/p/reviewsByUser/{st.session_state["id"]}').json()
+results = requests.get(f'http://api:4000/r/reviewsByUser/{st.session_state["id"]}').json()
 st.dataframe(results)
 
