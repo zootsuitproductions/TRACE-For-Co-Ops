@@ -13,7 +13,7 @@ st.header('Find Company and Position Reviews')
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
 
-results = requests.get(f'http://api:4000/s/companiesWithReviews').json()
+results = requests.get('http://api:4000/s/companiesWithReviews').json()
 
 # Extract company names into a list
 company_names = [item["CompanyName"] for item in results]
