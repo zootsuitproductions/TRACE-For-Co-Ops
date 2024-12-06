@@ -256,7 +256,12 @@ INSERT INTO Reviews (userID, roleID, publishedAt, reviewType, heading, content, 
 (27, 27, '2024-05-05 11:30:00', 'Review', 'Innovative Cloud Technologies', 'Great workplace for cloud engineers.', 125, 30, FALSE),
 (28, 28, '2024-05-10 14:15:00', 'Insight', 'Artisan Product Design', 'Creative work with room for growth.', 95, 12, FALSE),
 (29, 29, '2024-05-15 10:00:00', 'Experience', 'Efficient E-commerce Operations', 'Fast-paced environment with rewarding challenges.', 80, 18, FALSE),
-(30, 30, '2024-05-20 15:00:00', 'Feedback', 'Quantum Computing Innovations', 'Fascinating projects but steep learning curve.', 145, 28, FALSE);
+(30, 30, '2024-05-20 15:00:00', 'Feedback', 'Quantum Computing Innovations', 'Fascinating projects but steep learning curve.', 145, 28, FALSE),
+(31, 31, '2024-05-25 08:30:00', 'Interview Report', 'Interview Process at TechNova', 'The interview process was thorough with multiple technical rounds focusing on problem-solving and machine learning concepts. The final interview involved a coding challenge and a behavioral round.', 200, 45, FALSE),
+(32, 32, '2024-05-28 09:00:00', 'Interview Report', 'Interview Process at GreenTech Solutions', 'Had a great experience during the interview process. It started with an initial screening, followed by two technical rounds. The interviewers were friendly, but the technical assessment was quite challenging.', 150, 30, FALSE),
+(33, 33, '2024-06-01 10:15:00', 'Interview Report', 'Interview Process at SpaceX', 'The interview process was intense. First, a phone interview to discuss previous projects, then an onsite with coding exercises, and finally a behavioral interview to assess cultural fit. They were very focused on problem-solving skills.', 250, 55, FALSE),
+(34, 34, '2024-06-05 13:00:00', 'Interview Report', 'Interview Process at Innovate Labs', 'The process included a 30-minute phone interview, followed by a technical test with algorithmic problems. I was impressed by the professionalism of the team and the quick turnaround time.', 180, 40, FALSE),
+(35, 35, '2024-06-10 14:45:00', 'Interview Report', 'Interview Process at BioHealth Solutions', 'The interview process was well-structured. The first stage was a video interview with HR, followed by a second-stage technical interview where I was asked to solve coding problems related to healthcare technology.', 220, 50, FALSE);
 
 
 INSERT INTO Comments (reviewID, userID, parentCommentID, content, likes, isFlagged) VALUES
