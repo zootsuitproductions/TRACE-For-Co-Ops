@@ -17,13 +17,13 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 skills = requests.get('http://api:4000/s/possibleSkills').json()
 
 
-# Extract and split skillsRequired into a list of individual skills
-skillsRequired = []
+# Extract and split skillsRequired into a set of unique skills
+skillsRequired = set()
 for item in skills:
     # Split the skills by commas and strip any surrounding whitespace
     skills = item["skillsRequired"].split(",")
-    # Add each skill to the list
-    skillsRequired.extend([skill.strip() for skill in skills])
+    # Add each skill to the set
+    skillsRequired.update(skill.strip() for skill in skills)
 
 
 # Display a dropdown menu with company names
