@@ -27,6 +27,17 @@ except requests.exceptions.RequestException as e:
     st.error(f"Failed to fetch reviews: {e}")
     reviews = []
 
+# Function to fetch role and company details for each review
+def fetch_role_and_company(role_id):
+    try:
+        response = requests.get(f"http://api:4000/r/roleDetails/{role_id}")
+        response.raise_for_status()
+        role_data = response.json()
+        return role_data.get('roleName', 'N/A'), role_data.get('companyName', 'N/A')
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to fetch role and company for role ID {role_id}: {e}")
+        return 'N/A', 'N/A'
+
 # Function to fetch comments for a review
 def fetch_comments(review_id):
     try:
@@ -42,10 +53,14 @@ if reviews:
     st.subheader("Your Reviews")
     for review in reviews:
         with st.container():
+            # Fetch role and company details
+            role_name, company_name = fetch_role_and_company(review['roleID'])
+
             # Display review details
             st.markdown(f"### {review['heading']} ({review['reviewType']})")
             st.markdown(f"**Published At:** {review['publishedAt']}")
             st.markdown(f"**Views:** {review['views']}  |  **Likes:** {review['likes']}")
+            st.markdown(f"**Role:** {role_name} at **{company_name}**")
             st.markdown(f"**Content:** {review['content']}")
 
             # Fetch and display comments
