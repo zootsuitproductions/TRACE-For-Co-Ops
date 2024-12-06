@@ -116,12 +116,3 @@ st.subheader("Action History")
 for entry in st.session_state.History:
     st.write(entry)
 
-'''
-#st.write(history)
-if selected_post_id is not Nonest.session_state.History[selected_post_id]:
-    history = st.session_state.History[selected_post_id]
-    for entry in history:
-        st.write(f"- {entry['Timestamp']} - {entry['Action']} ({entry.get('Reason', 'No Reason')})")
-else:
-    st.write("No actions taken yet.")
-'''

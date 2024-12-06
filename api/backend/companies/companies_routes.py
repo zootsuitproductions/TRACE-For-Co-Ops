@@ -18,7 +18,7 @@ companies = Blueprint('companies', __name__)
 #------------------------------------------------------------
 # Get all feedback from the system
 @companies.route('/companies', methods=['GET'])
-def get_feedback():
+def get_companies():
     try:
         with db.get_db().cursor() as cursor:
             cursor.execute('''
@@ -117,4 +117,50 @@ def update_roles():
     finally:
         if 'cursor' in locals() and cursor:
             cursor.close()
+            
+@companies.route('/industries', methods=['GET'])
+def get_industries():
+    try:
+        with db.get_db().cursor() as cursor:
+            cursor.execute('''
+                SELECT count(C.companyID) AS NumCompany, I.name AS Industry
+                FROM Companies C JOIN CompanyIndustry CI
+                ON CI.companyID = C.companyID JOIN Industries I
+                ON I.industryID = CI.industryID 
+                GROUP BY I.industryID
+                ORDER BY I.industryID
+            ''')
+            theData = cursor.fetchall()
+
+        the_response = make_response(jsonify(theData))
+        the_response.status_code = 200
+        return the_response
+
+    except Exception as e:
+        current_app.logger.error(f"Error fetching companies: {e}")
+        return {"error": "An error occurred while fetching companies"}, 500
+    
+@companies.route('/reviews', methods=['GET'])
+def get_reviews():
+    try:
+        with db.get_db().cursor() as cursor:
+            cursor.execute('''
+                SELECT count(R.reviewID) AS NumReviews, I.name AS Industry
+                FROM Companies C JOIN CompanyIndustry CI
+                ON CI.companyID = C.companyID JOIN Industries I
+                ON I.industryID = CI.industryID JOIN Role RO
+                ON RO.CompanyID = C.CompanyID JOIN Reviews R
+                ON RO.roleID = R.roleID
+                GROUP BY I.industryID
+                ORDER BY I.industryID
+            ''')
+            theData = cursor.fetchall()
+
+        the_response = make_response(jsonify(theData))
+        the_response.status_code = 200
+        return the_response
+
+    except Exception as e:
+        current_app.logger.error(f"Error fetching reviews: {e}")
+        return {"error": "An error occurred while fetching reviews"}, 500
 
