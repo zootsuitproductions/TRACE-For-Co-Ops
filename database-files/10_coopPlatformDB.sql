@@ -90,7 +90,6 @@ CREATE TABLE IF NOT EXISTS Reviews (
    FOREIGN KEY (roleID) REFERENCES Role(roleID) ON DELETE CASCADE
 );
 
-
 -- Create Comments table
 CREATE TABLE IF NOT EXISTS Comments (
    commentID INT AUTO_INCREMENT PRIMARY KEY,
@@ -104,8 +103,9 @@ CREATE TABLE IF NOT EXISTS Comments (
    isFlagged BOOLEAN DEFAULT FALSE,
    FOREIGN KEY (reviewID) REFERENCES Reviews(reviewID) ON DELETE CASCADE,
    FOREIGN KEY (userID) REFERENCES User(userID),
-   FOREIGN KEY (parentCommentID) REFERENCES Comments(commentID)
+   FOREIGN KEY (parentCommentID) REFERENCES Comments(commentID) ON DELETE CASCADE
 );
+
 
 
 -- Create Badges table

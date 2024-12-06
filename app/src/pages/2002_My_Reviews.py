@@ -121,6 +121,25 @@ if reviews:
                 if st.button(f"Done {review['reviewID']}", key=f"cancel_button_{review['reviewID']}"):
                     st.session_state["editing_review_id"] = None
 
+             # Add a Delete button
+            delete_button = st.button(f"Delete Review {review['reviewID']}", key=f"delete_button_{review['reviewID']}")
+            
+            if delete_button:
+                # Confirm deletion before making the API request
+                confirm_delete = "Delete"
+                
+                if confirm_delete == "Delete":
+                    try:
+                        delete_response = requests.delete(
+                            f'http://api:4000/r/deleteReview/{review["reviewID"]}'
+                        )
+                        delete_response.raise_for_status()
+                        st.success("Review deleted successfully!")
+                        # Optionally, refresh the page or remove the deleted review from the list
+                        reviews = [rev for rev in reviews if rev["reviewID"] != review["reviewID"]]
+                    except requests.exceptions.RequestException as e:
+                        st.error(f"Failed to delete review: {e}")
+
             st.markdown("---")
 else:
     st.info("No reviews found. Start by adding your first review!")
