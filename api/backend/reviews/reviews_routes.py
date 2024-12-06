@@ -16,6 +16,38 @@ from backend.db_connection import db
 reviews = Blueprint('reviews', __name__)
 
 
+<<<<<<< HEAD
+=======
+@reviews.route('/addReview', methods=['POST'])
+def add_review():
+    review_data = request.json
+    try:
+        query = """
+        INSERT INTO Reviews (userID, roleID, publishedAt, reviewType, heading, content, views, likes, isFlagged)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        values = (
+            review_data["userID"],
+            review_data["roleID"],
+            review_data["publishedAt"],
+            review_data["reviewType"],
+            review_data["heading"],
+            review_data["content"],
+            review_data["views"],
+            review_data["likes"],
+            review_data["isFlagged"]
+        )
+        cursor = db.get_db().cursor()
+        cursor.execute(query, values)
+        db.get_db().commit()
+        return jsonify({"message": "Review added successfully!"}), 201
+    except Exception as e:
+        error_message = str(e)
+        print("Error:", error_message)
+        print(traceback.format_exc())
+        return jsonify({"error": error_message}), 500
+
+>>>>>>> 1a7805cdae2c5c2a740b690b50489d4caf4191d4
 # ------------------------------------------------------------
 # get product information about a specific product
 # notice that the route takes <id> and then you see id
