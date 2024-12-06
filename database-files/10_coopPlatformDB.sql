@@ -86,8 +86,8 @@ CREATE TABLE IF NOT EXISTS Reviews (
    views INT DEFAULT 0,
    likes INT DEFAULT 0,
    isFlagged BOOLEAN DEFAULT FALSE,
-   FOREIGN KEY (userID) REFERENCES User(userID),
-   FOREIGN KEY (roleID) REFERENCES Role(roleID)
+   FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE,
+   FOREIGN KEY (roleID) REFERENCES Role(roleID) ON DELETE CASCADE
 );
 
 
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS Comments (
    content TEXT,
    likes INT DEFAULT 0,
    isFlagged BOOLEAN DEFAULT FALSE,
-   FOREIGN KEY (reviewID) REFERENCES Reviews(reviewID),
+   FOREIGN KEY (reviewID) REFERENCES Reviews(reviewID) ON DELETE CASCADE,
    FOREIGN KEY (userID) REFERENCES User(userID),
    FOREIGN KEY (parentCommentID) REFERENCES Comments(commentID)
 );

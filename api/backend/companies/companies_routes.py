@@ -43,7 +43,7 @@ def get_feedback():
 
 @companies.route('/companies/companies', methods=['PUT'])
 def update_company():
-    current_app.logger.info('PUT /feedback route')
+    current_app.logger.info('PUT /companies route')
     try:
         companies_info = request.json
 

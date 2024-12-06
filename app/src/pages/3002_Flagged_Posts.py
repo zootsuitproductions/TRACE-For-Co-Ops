@@ -3,8 +3,9 @@ logger = logging.getLogger(__name__)
 import pandas as pd
 import streamlit as st
 from streamlit_extras.app_logo import add_logo
-import world_bank_data as wb
+import requests
 import matplotlib.pyplot as plt
+from datetime import datetime
 import numpy as np
 import plotly.express as px
 from modules.nav import SideBarLinks
@@ -18,67 +19,117 @@ st.header('View and Moderate Flagged Posts')
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
 
-import streamlit as st
-import pandas as pd
-from datetime import datetime
+# get flagged posts
+try:
+    reviews = requests.get("http://api:4000/r/flagged").json()
+except:
+    st.write("Could not to conncet to database to get flagged reviews")
 
-# Sample data for flagged posts
-sample_data = [
-    {"Post ID": 1, "Content": "This is a flagged post.", "Flag Reason": "Inappropriate Language", "History": []},
-    {"Post ID": 2, "Content": "Another flagged post here.", "Flag Reason": "Spam", "History": []},
-]
+if "reviews" not in st.session_state:
+    st.session_state.reviews = pd.DataFrame(reviews)
 
-# Convert sample data to DataFrame
-posts_df = pd.DataFrame(sample_data)
+if "History" not in st.session_state:
+    st.session_state.History = []
+    
+if "timestamp" not in st.session_state:
+    st.session_state.timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 # Function to log actions
-def log_action(post_id, action, reason=None):
-    for post in sample_data:
-        if post["Post ID"] == post_id:
+def log_action(reviewID, action, reason=None):
+    for i in range(len(st.session_state.reviews)):
+        review = st.session_state.reviews.iloc[i]
+        if review["reviewID"] == reviewID:
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            post["History"].append({"Action": action, "Reason": reason, "Timestamp": timestamp})
+            #Hstory[reviewID] = {"Action": action, "Reason": reason, "Timestamp": timestamp}
 
 # Streamlit app
 st.title("Flagged Posts Review Interface")
 
-# Display flagged posts
+# Display flagged posts in a table
 st.subheader("Flagged Posts")
+selected_post_id = st.selectbox(
+    "Select a review to review:",
+    st.session_state.reviews["reviewID"],
+    format_func=lambda x: f"Review {x}: {st.session_state.reviews.loc[st.session_state.reviews['reviewID'] == x, 'heading'].values[0]}"
+)
 
-for index, row in posts_df.iterrows():
-    st.write(f"**Post ID:** {row['Post ID']}")
-    st.write(f"**Content:** {row['Content']}")
-    st.write(f"**Flag Reason:** {row['Flag Reason']}")
 
-    # Buttons for actions
-    col1, col2, col3 = st.columns(3)
+# Show details of the selected post
+selected_post = st.session_state.reviews[st.session_state.reviews["reviewID"] == selected_post_id].iloc[0]
+st.write(f"**Review ID:** {selected_post['reviewID']}")
+st.write(f"**Content:** {selected_post['content']}")
+st.write(f"**Review Type:** {selected_post['reviewType']}")
 
-    with col1:
-        if st.button(f"Approve Post {row['Post ID']}"):
-            log_action(row['Post ID'], "Approved")
-            st.success(f"Post {row['Post ID']} approved.")
+# Action options
+st.subheader("Actions")
+action = st.radio("Select an action to perform:", ["None", "Approve", "Edit", "Remove"],index = 0)
+# Execute selected action
 
-    with col2:
-        if st.button(f"Edit Post {row['Post ID']}"):
-            new_content = st.text_area(f"Edit Content for Post {row['Post ID']}", row['Content'])
-            if st.button(f"Save Changes to Post {row['Post ID']}"):
-                posts_df.loc[index, "Content"] = new_content
-                log_action(row['Post ID'], "Edited", f"Updated content to: {new_content}")
-                st.success(f"Post {row['Post ID']} updated.")
+if action == "Approve":
+    st.session_state.timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    data = {
+            "reviewID": selected_post_id, 
+            "isFlagged": False
+        }
 
-    with col3:
-        if st.button(f"Remove Post {row['Post ID']}"):
-            log_action(row['Post ID'], "Removed")
-            st.warning(f"Post {row['Post ID']} removed.")
+    response = requests.put("http://api:4000/r/approveflagged", json=data)
 
-    # Display action history
-    st.write("**Action History:**")
-    history = row['History']
-    if history:
-        for entry in history:
-            st.write(f"- {entry['Timestamp']} - {entry['Action']} ({entry.get('Reason', 'No Reason')})")
+    # reflect the response
+    if response.status_code == 200:
+        print("Success:", response.json())
     else:
-        st.write("No actions taken yet.")
+        print("Error:", response.status_code, response.json())
+    st.success(f"Review {selected_post_id} approved.")
+    
 
-    st.divider()
 
-st.write("**Note:** This interface uses sample data. Replace with actual data for production.")
+elif action == "Edit":
+    new_content = st.text_area("Edit Content", selected_post['content'])
+    if st.button("Save Changes"):
+        st.session_state.timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        st.session_state.reviews.loc[st.session_state.reviews["reviewID"] == selected_post_id, "Content"] = new_content
+        data = {
+            "reviewID": selected_post_id, 
+            "content": new_content
+        }
+
+        response = requests.put("http://api:4000/r/editflagged", json=data)
+
+        # reflect the response
+        if response.status_code == 200:
+            print("Success:", response.json())
+        else:
+            print("Error:", response.status_code, response.json())
+        st.success(f"Post {selected_post_id} updated.")
+
+elif action == "Remove":
+    st.session_state.timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    data = {
+        "reviewID": selected_post_id, 
+    }
+    response = requests.delete("http://api:4000/r/removeflagged", json=data)
+    if response.status_code == 200:
+        print("Success:", response.json())
+    else:
+        try:
+            error_message = response.json()
+        except ValueError:
+            error_message = "No error details provided"
+        print("Error:", response.status_code, error_message)
+    st.warning(f"Review {selected_post_id} removed.")
+
+st.session_state.History.append(f"- {st.session_state.timestamp} - Review {selected_post_id} - {action}")
+# Display action history
+st.subheader("Action History")
+for entry in st.session_state.History:
+    st.write(entry)
+
+'''
+#st.write(history)
+if selected_post_id is not Nonest.session_state.History[selected_post_id]:
+    history = st.session_state.History[selected_post_id]
+    for entry in history:
+        st.write(f"- {entry['Timestamp']} - {entry['Action']} ({entry.get('Reason', 'No Reason')})")
+else:
+    st.write("No actions taken yet.")
+'''
