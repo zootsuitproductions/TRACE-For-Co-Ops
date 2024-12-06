@@ -18,24 +18,67 @@ st.header('View and Moderate Flagged Posts')
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
 
-# get the countries from the world bank data
-with st.echo(code_location='above'):
-    countries:pd.DataFrame = wb.get_countries()
-   
-    st.dataframe(countries)
+import streamlit as st
+import pandas as pd
+from datetime import datetime
 
-# the with statment shows the code for this block above it 
-with st.echo(code_location='above'):
-    arr = np.random.normal(1, 1, size=100)
-    test_plot, ax = plt.subplots()
-    ax.hist(arr, bins=20)
+# Sample data for flagged posts
+sample_data = [
+    {"Post ID": 1, "Content": "This is a flagged post.", "Flag Reason": "Inappropriate Language", "History": []},
+    {"Post ID": 2, "Content": "Another flagged post here.", "Flag Reason": "Spam", "History": []},
+]
 
-    st.pyplot(test_plot)
+# Convert sample data to DataFrame
+posts_df = pd.DataFrame(sample_data)
 
+# Function to log actions
+def log_action(post_id, action, reason=None):
+    for post in sample_data:
+        if post["Post ID"] == post_id:
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            post["History"].append({"Action": action, "Reason": reason, "Timestamp": timestamp})
 
-with st.echo(code_location='above'):
-    slim_countries = countries[countries['incomeLevel'] != 'Aggregates']
-    data_crosstab = pd.crosstab(slim_countries['region'], 
-                                slim_countries['incomeLevel'],  
-                                margins = False) 
-    st.table(data_crosstab)
+# Streamlit app
+st.title("Flagged Posts Review Interface")
+
+# Display flagged posts
+st.subheader("Flagged Posts")
+
+for index, row in posts_df.iterrows():
+    st.write(f"**Post ID:** {row['Post ID']}")
+    st.write(f"**Content:** {row['Content']}")
+    st.write(f"**Flag Reason:** {row['Flag Reason']}")
+
+    # Buttons for actions
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        if st.button(f"Approve Post {row['Post ID']}"):
+            log_action(row['Post ID'], "Approved")
+            st.success(f"Post {row['Post ID']} approved.")
+
+    with col2:
+        if st.button(f"Edit Post {row['Post ID']}"):
+            new_content = st.text_area(f"Edit Content for Post {row['Post ID']}", row['Content'])
+            if st.button(f"Save Changes to Post {row['Post ID']}"):
+                posts_df.loc[index, "Content"] = new_content
+                log_action(row['Post ID'], "Edited", f"Updated content to: {new_content}")
+                st.success(f"Post {row['Post ID']} updated.")
+
+    with col3:
+        if st.button(f"Remove Post {row['Post ID']}"):
+            log_action(row['Post ID'], "Removed")
+            st.warning(f"Post {row['Post ID']} removed.")
+
+    # Display action history
+    st.write("**Action History:**")
+    history = row['History']
+    if history:
+        for entry in history:
+            st.write(f"- {entry['Timestamp']} - {entry['Action']} ({entry.get('Reason', 'No Reason')})")
+    else:
+        st.write("No actions taken yet.")
+
+    st.divider()
+
+st.write("**Note:** This interface uses sample data. Replace with actual data for production.")
