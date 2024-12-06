@@ -1,24 +1,91 @@
 import logging
-logger = logging.getLogger(__name__)
 import pandas as pd
 import streamlit as st
 from streamlit_extras.app_logo import add_logo
-import world_bank_data as wb
-import matplotlib.pyplot as plt
-import numpy as np
+import requests
 import plotly.express as px
 from modules.nav import SideBarLinks
-import requests
+
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 # Call the SideBarLinks from the nav module in the modules directory
 SideBarLinks()
 
-# set the header of the page
+# Set the header of the page
 st.header('My Reviews')
 
-# You can access the session state to make a more customized/personalized app experience
-st.write(f"### Hi, {st.session_state['first_name']}.")
+# Display personalized greeting
+st.write(f"### Hi, {st.session_state['first_name']}!")
 
-results = requests.get(f'http://api:4000/r/reviewsByUser/{st.session_state["id"]}').json()
-st.dataframe(results)
+# Fetch the user's reviews
+try:
+    response = requests.get(f'http://api:4000/r/reviewsByUser/{st.session_state["id"]}')
+    response.raise_for_status()
+    reviews = response.json()
+except requests.exceptions.RequestException as e:
+    st.error(f"Failed to fetch reviews: {e}")
+    reviews = []
 
+# Function to fetch comments for a review
+def fetch_comments(review_id):
+    try:
+        response = requests.get(f"http://api:4000/r/commentsByReview/{review_id}")
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to fetch comments for review {review_id}: {e}")
+        return []
+
+# If there are reviews, display them
+if reviews:
+    st.subheader("Your Reviews")
+    for review in reviews:
+        with st.container():
+            # Display review details
+            st.markdown(f"### {review['heading']} ({review['reviewType']})")
+            st.markdown(f"**Published At:** {review['publishedAt']}")
+            st.markdown(f"**Views:** {review['views']}  |  **Likes:** {review['likes']}")
+            st.markdown(f"**Content:** {review['content']}")
+
+            # Fetch and display comments
+            comments = fetch_comments(review['reviewID'])
+            st.markdown("#### Comments:")
+            if comments:
+                for comment in comments:
+                    st.markdown(f"- **User {comment['userID']}**: {comment['content']} (Likes: {comment['likes']})")
+            else:
+                st.markdown("*No comments yet.*")
+
+            # Display the edit button
+            if st.button(f"Edit Review", review['reviewID']):
+                # If the button is clicked, show the edit form
+                with st.form(key=f'edit_review_{review["reviewID"]}'):
+                    st.subheader("Edit this Review")
+
+                    # Pre-fill the form with the current review details
+                    new_heading = st.text_input("Heading", value=review["heading"])
+                    new_content = st.text_area("Content", value=review["content"])
+                    new_review_type = st.selectbox("Review Type", ["Experience", "Feedback", "Other"], index=["Experience", "Feedback", "Other"].index(review["reviewType"]))
+
+                    submit_button = st.form_submit_button(label="Update Review")
+
+                    # Handle form submission
+                    if submit_button:
+                        update_review_data = {
+                            "reviewID": review["reviewID"],
+                            "heading": new_heading,
+                            "content": new_content,
+                            "reviewType": new_review_type
+                        }
+
+                        try:
+                            update_response = requests.put(f'http://api:4000/r/updateReview', json=update_review_data)
+                            update_response.raise_for_status()
+                            st.success("Review updated successfully!")
+                        except requests.exceptions.RequestException as e:
+                            st.error(f"Failed to update review: {e}")
+
+            st.markdown("---")
+else:
+    st.info("No reviews found. Start by adding your first review!")

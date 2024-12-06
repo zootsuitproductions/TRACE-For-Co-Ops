@@ -83,6 +83,56 @@ WHERE
     response.status_code = 200
     return response
 
+@reviews.route('/commentsByReview/<reviewID>', methods=['GET'])
+def get_comments_by_review(reviewID):
+    query = f'''
+        SELECT 
+            c.commentID,
+            c.userID,
+            c.parentCommentID,
+            c.createdAt,
+            c.content,
+            c.likes
+        FROM 
+            Comments c
+        WHERE 
+            c.reviewID = {str(reviewID)}
+        ORDER BY 
+            c.createdAt ASC;
+    '''
+    
+    # Get the database connection, execute the query, and 
+    # fetch the results as a Python Dictionary
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+@reviews.route('/updateReview', methods=['PUT'])
+def update_review():
+    data = request.get_json()
+    
+    reviewID = data.get('reviewID')
+    heading = data.get('heading')
+    content = data.get('content')
+    reviewType = data.get('reviewType')
+    
+    query = '''
+        UPDATE Reviews
+        SET heading = %s, content = %s, reviewType = %s
+        WHERE reviewID = %s;
+    '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (heading, content, reviewType, reviewID))
+    db.get_db().commit()
+
+    response = make_response(jsonify({"message": "Review updated successfully"}))
+    response.status_code = 200
+    return response
 
 #------------------------------------------------------------
 # Get all the products from the database, package them up,
