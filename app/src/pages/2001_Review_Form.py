@@ -79,11 +79,11 @@ if companies:
 
             # Pre-fill the form with role info
             st.write(f"Reviewing role: {selected_role_name} at {selected_company_name}")
-
+            
+            new_review_type = st.selectbox("Review Type", ["Experience", "InterviewReport", "Feedback", "Other"])
             new_heading = st.text_input("Review Heading")
             new_content = st.text_area("Content")
-            new_review_type = st.selectbox("Review Type", ["Experience", "InterviewReport", "Feedback", "Other"])
-
+            
             submit_button = st.form_submit_button("Submit Review")
 
             # Handle form submission

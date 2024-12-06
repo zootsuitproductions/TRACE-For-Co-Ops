@@ -382,16 +382,17 @@ def update_review():
     reviewID = data.get('reviewID')
     heading = data.get('heading')
     content = data.get('content')
-    reviewType = data.get('reviewType')
+
+    print("NEW CONTENT: ", content)
     
     query = '''
         UPDATE Reviews
-        SET heading = %s, content = %s, reviewType = %s
+        SET heading = %s, content = %s
         WHERE reviewID = %s;
     '''
     
     cursor = db.get_db().cursor()
-    cursor.execute(query, (heading, content, reviewType, reviewID))
+    cursor.execute(query, (heading, content, reviewID))
     db.get_db().commit()
 
     response = make_response(jsonify({"message": "Review updated successfully"}))
