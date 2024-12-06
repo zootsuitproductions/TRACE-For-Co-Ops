@@ -36,7 +36,9 @@ st.title("Company and Role Manager")
 # Filter settings
 st.subheader("Filter and Highlight Options")
 filter_by_time = st.checkbox("Filter by Last Updated Time", value=False)
-highlight_missing = st.checkbox("Highlight Missing or Outdated Data", value=True)
+hide_location = st.checkbox("Hide Location", value=False)
+highlight_missing = st.checkbox("Highlight Missing Data", value=True)
+
 
 # Time filter input
 if filter_by_time:
@@ -45,25 +47,35 @@ if filter_by_time:
     )
     # Convert to datetime for comparison
     time_threshold = dt.datetime.combine(time_threshold, dt.datetime.min.time())
+    
 
 
 company_df = st.session_state.companies_df.copy()
-st.dataframe(company_df)
-display_columns = ["status", "feedbackID", "userID", "timestamp", "header", "content"]
+company_df = company_df.rename(columns={'I.name': 'Industry', 'R.description':'Role Description', 'address':'Address', 'city':'City', 'country': 'Country', 'description':'Company Description', 'name': 'Company Name', 'roleName': 'Role Name', 'skillsRequired':'Skills Required', 'state_province':'State Province','updatedAT': 'Last Updated'})
+display_columns = ["Company Name", "Last Updated", "Industry", "Company Description", "Role Name", "Skills Required", "Role Description", "Address", "City", "State Province", "Country"]
 company_df = company_df[display_columns]
+company_df['Last Updated'] = pd.to_datetime(company_df['Last Updated'])
 
 
 # Apply filters and highlights
 if filter_by_time:
-    company_df = company_df[company_df["LastUpdated"] > time_threshold]
+    company_df = company_df[company_df["Last Updated"] > time_threshold]
+
+if hide_location:
+    company_df = company_df.drop(columns = ["Address", "City", "State Province", "Country"])
+#st.dataframe(company_df)
 
 if highlight_missing:
-    def highlight_conditions(row):
-        if row["Status"] in ["Missing Data", "Outdated"]:
-            return ["background-color: yellow"] * len(row)
-        return [""] * len(row)
+    def highlight_null_rows(df):
+        def highlight_row(row):
+            if row.isnull().any():
+                return ['background-color: yellow'] * len(row)
+            else:
+                return [''] * len(row)
+                
+        return df.style.apply(highlight_row, axis=1)
 
-    styled_df = company_df.style.apply(highlight_conditions, axis=1)
+    styled_df = highlight_null_rows(company_df)
     st.dataframe(styled_df)
 else:
     st.dataframe(company_df)
