@@ -73,7 +73,9 @@ if reviews:
                 st.markdown("*No comments yet.*")
 
             # Display the edit button
-            if st.button(f"Edit Review", review['reviewID']):
+            edit_button = st.button(f"Edit Review {review['reviewID']}")
+
+            if edit_button:
                 # If the button is clicked, show the edit form
                 with st.form(key=f'edit_review_{review["reviewID"]}'):
                     st.subheader("Edit this Review")
