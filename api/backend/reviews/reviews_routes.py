@@ -99,9 +99,9 @@ def get_role_details(role_id):
     query = f'''
         SELECT 
             r.roleName, 
-            c.companyName
+            c.name
         FROM 
-            Roles r
+            Role r
         JOIN 
             Companies c ON r.companyID = c.companyID
         WHERE 
@@ -119,7 +119,7 @@ def get_role_details(role_id):
     
     response = {
         'roleName': role_data['roleName'],
-        'companyName': role_data['companyName']
+        'companyName': role_data['name']
     }
     
     return make_response(jsonify(response), 200)
