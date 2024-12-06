@@ -1,6 +1,5 @@
 ########################################################
-# Sample customers blueprint of endpoints
-# Remove this file if you are not using it in your project
+# Feedback blueprint of endpoints
 ########################################################
 from flask import Blueprint
 from flask import request
@@ -21,7 +20,6 @@ feedback = Blueprint('feedback', __name__)
 @feedback.route('/feedback', methods=['GET'])
 def get_feedback():
     try:
-        # カーソルの管理
         with db.get_db().cursor() as cursor:
             cursor.execute('''
                 SELECT feedbackID, userID, timestamp, header, content, status
@@ -29,7 +27,6 @@ def get_feedback():
             ''')
             theData = cursor.fetchall()
 
-        # レスポンスを返す
         the_response = make_response(jsonify(theData))
         the_response.status_code = 200
         return the_response
