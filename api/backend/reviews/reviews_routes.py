@@ -16,8 +16,6 @@ from backend.db_connection import db
 reviews = Blueprint('reviews', __name__)
 
 
-<<<<<<< HEAD
-=======
 @reviews.route('/addReview', methods=['POST'])
 def add_review():
     review_data = request.json
@@ -47,7 +45,6 @@ def add_review():
         print(traceback.format_exc())
         return jsonify({"error": error_message}), 500
 
->>>>>>> 1a7805cdae2c5c2a740b690b50489d4caf4191d4
 # ------------------------------------------------------------
 # get product information about a specific product
 # notice that the route takes <id> and then you see id
