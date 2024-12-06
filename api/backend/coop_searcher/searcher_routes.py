@@ -13,23 +13,27 @@ from backend.ml_models.model01 import predict
 #------------------------------------------------------------
 # Create a new Blueprint object, which is a collection of 
 # routes.
-customers = Blueprint('coop_searcher', __name__)
-
+searcher = Blueprint('coop_searcher', __name__)
 
 #------------------------------------------------------------
 # Get all customers from the system
-@customers.route('/companiesWithReviews', methods=['GET'])
-def get_customers():
+@searcher.route('/companiesWithReviews', methods=['GET'])
+def get_companies_with_reviews():
 
-    cursor = db.get_db().cursor()
-    cursor.execute('''SELECT DISTINCT c.name AS CompanyName
+    query = '''
+                    SELECT DISTINCT c.name AS CompanyName
                     FROM Companies c
                     JOIN Role r ON c.companyID = r.companyID
                     JOIN Reviews rv ON r.roleID = rv.roleID;
-    ''')
+    '''
     
+    # get the database connection, execute the query, and 
+    # fetch the results as a Python Dictionary
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
     theData = cursor.fetchall()
     
-    the_response = make_response(jsonify(theData))
-    the_response.status_code = 200
-    return the_response
+    
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
