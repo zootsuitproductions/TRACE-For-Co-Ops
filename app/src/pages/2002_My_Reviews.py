@@ -15,9 +15,6 @@ SideBarLinks()
 # Set the header of the page
 st.header('My Reviews')
 
-# Display personalized greeting
-st.write(f"### Hi, {st.session_state['first_name']}!")
-
 # Fetch the user's reviews
 try:
     response = requests.get(f'http://api:4000/r/reviewsByUser/{st.session_state["id"]}')
@@ -54,16 +51,16 @@ if "editing_review_id" not in st.session_state:
     st.session_state["editing_review_id"] = None
 
 if reviews:
-    st.subheader("Your Reviews")
     for review in reviews:
         with st.container():
             # Fetch role and company details
             role_name, company_name = fetch_role_and_company(review['roleID'])
 
             # Display review details
-            st.markdown(f"### {review['heading']} ({review['reviewType']})")
+            st.markdown(f"### {review['reviewType']}")   # Review type in bold above the title
             st.markdown(f"**Role:** {role_name} at **{company_name}**")
-            st.markdown(f"**Content:** {review['content']}")
+            st.markdown(f"#### {review['heading']}") 
+            st.markdown(f"{review['content']}")
             st.markdown(f"**Views:** {review['views']}  |  **Likes:** {review['likes']}")
             
 
