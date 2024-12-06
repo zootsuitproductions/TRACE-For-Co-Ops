@@ -18,15 +18,6 @@ st.header('View and Categorize User Feedback')
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
 
-<<<<<<< HEAD
-# get the feedbacks
-try:
-    feedback = requests.get("http://api:4000/f/feedback").json()
-    st.dataframe(feedback)
-except:
-    st.write("Could not to conncet to database to get user feedback")
-=======
-
 # get the feedbacks
 try:
     feedback = requests.get("http://api:4000/f/feedback").json()
