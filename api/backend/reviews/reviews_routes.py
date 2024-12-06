@@ -17,7 +17,7 @@ from datetime import datetime
 # routes.
 reviews = Blueprint('reviews', __name__)
 
-@reviews.route('/addReview', methods=['POST'])
+@reviews.route('/submitReview', methods=['POST'])
 def add_review():
     review_data = request.json
     try:
