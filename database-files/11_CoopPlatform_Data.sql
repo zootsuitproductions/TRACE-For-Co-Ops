@@ -387,5 +387,36 @@ INSERT INTO Feedback (userID, header, content, status) VALUES
 (10, 'Billing System', 'The billing system has recurring issues.', 'In Progress');
 
 
+INSERT INTO InterviewReports (roleID, userID, interviewDate, difficultyLevel, notes, tips) VALUES
+(1, 1, '2024-08-10', 'Hard', 'The interview covered advanced ML algorithms, including neural networks and reinforcement learning.', 'Review basic ML concepts and focus on model deployment strategies.'),
+(2, 2, '2024-08-12', 'Medium', 'The interview involved sustainability case studies and analysis of environmental impact reports.', 'Be prepared to discuss recent advancements in sustainable farming technologies.'),
+(3, 3, '2024-08-15', 'Hard', 'The interview asked about satellite design and aerodynamics, with technical problems related to spacecraft dynamics.', 'Study advanced aerodynamics principles and spacecraft systems.'),
+(4, 4, '2024-08-18', 'Medium', 'The interview was more focused on renewable energy trends and project management for large-scale solar projects.', 'Know the basics of solar energy and project lifecycle management.'),
+(5, 5, '2024-08-20', 'Easy', 'The interview was based on content development strategies, including ideas for online learning materials.', 'Make sure you have examples of your previous educational content work ready.'),
+(6, 6, '2024-08-22', 'Medium', 'The interview included questions about clinical trials and statistical methods for analyzing treatment data.', 'Brush up on research methods and the latest trends in clinical trials.'),
+(7, 7, '2024-08-25', 'Medium', 'The interview discussed architectural design, focusing on urban planning and sustainable building materials.', 'Familiarize yourself with new urban design trends and eco-friendly materials.'),
+(8, 8, '2024-08-28', 'Hard', 'The interview included technical questions on water purification systems and hydraulics.', 'Study advanced water treatment technologies and system design principles.'),
+(9, 9, '2024-09-01', 'Medium', 'The interview was about designing scalable software and understanding cloud architecture.', 'Prepare to talk about cloud computing and distributed systems in depth.'),
+(10, 10, '2024-09-03', 'Easy', 'The interview focused on content creation and video production techniques for digital platforms.', 'Bring a portfolio of your previous video work and show your creative process.'),
+(11, 11, '2024-09-06', 'Medium', 'The interview asked questions about robotics engineering and automating industrial processes.', 'Review robotics programming and automation techniques.'),
+(12, 12, '2024-09-09', 'Medium', 'The interview involved questions on financial analysis and modeling techniques for business decision-making.', 'Practice financial modeling using Excel and understand different valuation techniques.'),
+(13, 13, '2024-09-12', 'Hard', 'The interview asked about autonomous vehicle technologies and control systems for self-driving cars.', 'Prepare to discuss the latest advancements in autonomous driving technologies.'),
+(14, 14, '2024-09-14', 'Medium', 'The interview focused on biotechnology research, specifically CRISPR technology and genetic engineering.', 'Review current CRISPR techniques and its applications in genetic modification.'),
+(15, 15, '2024-09-17', 'Medium', 'The interview covered logistics and supply chain optimization methods, with a focus on SAP systems.', 'Study supply chain management practices and how SAP is used for optimization.'),
+(16, 16, '2024-09-20', 'Hard', 'The interview included cybersecurity scenarios, focusing on penetration testing and system vulnerabilities.', 'Review network security principles and practice penetration testing techniques.'),
+(17, 17, '2024-09-23', 'Medium', 'The interview discussed the design of sports equipment and material science for manufacturing high-performance gear.', 'Prepare to talk about materials used in sports equipment and performance enhancement.'),
+(18, 18, '2024-09-26', 'Medium', 'The interview focused on green building standards and managing eco-friendly construction projects.', 'Be prepared to discuss LEED certifications and green construction techniques.'),
+(19, 19, '2024-09-29', 'Medium', 'The interview included questions on developing VR applications, focusing on medical simulations and training programs.', 'Study the latest trends in virtual reality development, especially in medical applications.'),
+(20, 20, '2024-10-01', 'Medium', 'The interview asked about managing food product development, including market trends and production processes.', 'Review trends in food science and how to launch a successful product line.'),
+(21, 21, '2024-10-04', 'Easy', 'The interview focused on interior design concepts, creative design techniques, and project execution.', 'Bring a portfolio showcasing your interior design work and creative process.'),
+(22, 22, '2024-10-06', 'Medium', 'The interview covered the development and promotion of veterinary products, with a focus on regulatory compliance.', 'Know the latest trends in veterinary products and regulatory requirements.'),
+(23, 23, '2024-10-09', 'Easy', 'The interview was focused on tourism management, including customer service techniques and logistics planning for tours.', 'Prepare examples of your customer service experience in the hospitality industry.'),
+(24, 24, '2024-10-12', 'Medium', 'The interview discussed optimizing manufacturing processes, including lean manufacturing principles and process design.', 'Familiarize yourself with lean principles and how they apply to manufacturing workflows.'),
+(25, 25, '2024-10-15', 'Hard', 'The interview asked about advanced data analysis techniques, including machine learning models for data-driven decision-making.', 'Prepare to discuss your experience with machine learning and data visualization.'),
+(26, 26, '2024-10-18', 'Medium', 'The interview focused on agricultural engineering, specifically the implementation of new technologies in farming.', 'Review the latest agricultural technologies and mechanical engineering concepts.'),
+(27, 27, '2024-10-21', 'Hard', 'The interview covered cloud infrastructure management, focusing on AWS and Kubernetes for scalable deployments.', 'Brush up on AWS services and Kubernetes for container orchestration.'),
+(28, 28, '2024-10-24', 'Easy', 'The interview was about artisan product design, with a focus on creative strategies and marketing methods.', 'Prepare examples of your handmade products and how you market them.'),
+(29, 29, '2024-10-27', 'Medium', 'The interview focused on e-commerce logistics, including inventory management and analytics for improving operations.', 'Study e-commerce best practices and how to use data to improve logistics.'),
+(30, 30, '2024-10-30', 'Hard', 'The interview was about quantum computing research, with a focus on algorithms and real-world applications of quantum theory.', 'Prepare to discuss quantum mechanics and how quantum computing can be applied in real-world scenarios.');
 
 

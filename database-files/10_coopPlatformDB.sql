@@ -134,6 +134,19 @@ CREATE TABLE IF NOT EXISTS Feedback (
    FOREIGN KEY (userID) REFERENCES User(userID)
 );
 
+-- Create InterviewReports table
+CREATE TABLE IF NOT EXISTS InterviewReports (
+   reportID INT AUTO_INCREMENT PRIMARY KEY,
+   roleID INT,
+   userID INT,
+   interviewDate DATE,
+   difficultyLevel VARCHAR(50),
+   tips TEXT,
+   FOREIGN KEY (roleID) REFERENCES Role(roleID),
+   FOREIGN KEY (userID) REFERENCES User(userID)
+);
+
+
 
 
 
