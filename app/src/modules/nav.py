@@ -62,6 +62,11 @@ def ReviewerPageNav():
 def AdminPageNav():
     st.sidebar.page_link("pages/300_System_Administrator_Home.py", label="System Admin", icon="🖥️")
 
+    #### ------------------------ System Admin Role ------------------------
+def AnalyistPageNav():
+    st.sidebar.page_link("pages/400_Analyst_Home.py", label="Site Analyst", icon="📊")
+
+
 
 # --------------------------------Links Function -----------------------------------------------
 def SideBarLinks(show_home=False):
@@ -101,6 +106,9 @@ def SideBarLinks(show_home=False):
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state["role"] == "administrator":
             AdminPageNav()
+
+        if st.session_state["role"] == "analyst":
+            AnalyistPageNav()
 
     # Always show the About page at the bottom of the list of links
     AboutPageNav()
