@@ -61,13 +61,13 @@ if st.button('Act as Riley, a student Co-Op Reviewer',
     st.session_state['first_name'] = 'Riley'
     st.switch_page('pages/200_CoOp_Reviewer_Home.py')
 
-if st.button('Act as System Administrator', 
+if st.button('Act as Alex Admin, System Administrator', 
             type = 'primary', 
             use_container_width=True):
     st.session_state['authenticated'] = True
     st.session_state['role'] = 'administrator'
-    st.session_state['first_name'] = 'SysAdmin'
-    logger.info("Logging in as System Administrator")
+    st.session_state['first_name'] = 'Alex'
+    logger.info("Logging in as Alex Admin, System Administrator")
     st.switch_page('pages/300_System_Administrator_Home.py')
 
 

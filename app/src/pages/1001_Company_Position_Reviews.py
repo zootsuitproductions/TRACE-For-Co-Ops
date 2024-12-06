@@ -28,6 +28,6 @@ reviews = requests.get(f'http://api:4000/s/reviewsForCompany/{selected_company}'
 if reviews:
     st.write("### Reviews for this Company:")
     # Display reviews in a table format
-    st.dataframe(reviews)
+    st.dataframe(reviews, use_container_width=True)
 else:
     st.write("No reviews available for this company.")
