@@ -67,3 +67,51 @@ def get_reviews_for_company(company_name):
     response.status_code = 200
     return response
 
+
+# Get possible skills
+@searcher.route('/possibleSkills', methods=['GET'])
+def get_possible_skills():
+    # Query to get the skillsRequired for all roles
+    query = '''
+        SELECT r.skillsRequired
+        FROM Role r;
+    '''
+    
+    # Get the database connection, execute the query, and fetch the results
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+# Get roles that require a specific skill
+@searcher.route('/rolesForSkill/<skill>', methods=['GET'])
+def get_roles_for_skill(skill):
+    try:
+        # Query to find roles that require the specified skill
+        query = '''
+            SELECT r.roleName, c.name AS companyName, r.skillsRequired
+            FROM Role r
+            JOIN Companies c ON r.companyID = c.companyID
+            WHERE r.skillsRequired LIKE %s;
+        '''
+        
+        # Get the database connection, execute the query, and fetch the results
+        cursor = db.get_db().cursor()
+        cursor.execute(query, ('%' + skill + '%',))  # Using LIKE to match the skill within skillsRequired
+        theData = cursor.fetchall()
+        
+        # If no roles are found, log a warning
+        if not theData:
+            current_app.logger.warning(f"No roles found requiring the skill: {skill}")
+        
+        # Make the response
+        response = make_response(jsonify(theData))
+        response.status_code = 200
+        return response
+        
+    except Exception as e:
+        # Log the error and return a 500 error response
+        current_app.logger.error(f"Error fetching roles for skill {skill}: {e}")
+        return make_response(jsonify({"error": "Database query failed"}), 500)
