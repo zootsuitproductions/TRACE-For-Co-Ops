@@ -22,8 +22,13 @@ def get_feedback():
     try:
         with db.get_db().cursor() as cursor:
             cursor.execute('''
-                SELECT feedbackID, userID, timestamp, header, content, status
-                FROM Feedback;
+                SELECT C.name, C.description, C.updatedAT, I.name, L.address, L.city, L.state_province, L.country, R.roleName, R.description, R.skillsRequired
+                FROM Companies C JOIN Location L
+                ON C.companyID = L.companyID JOIN CompanyIndustry CI
+                ON CI.companyID = C.companyID JOIN Industries I
+                ON I.industryID = CI.industryID JOIN Role R
+                ON R.companyID = C.companyID
+                ORDER BY C.name ASC;
             ''')
             theData = cursor.fetchall()
 
@@ -32,8 +37,8 @@ def get_feedback():
         return the_response
 
     except Exception as e:
-        current_app.logger.error(f"Error fetching feedback: {e}")
-        return {"error": "An error occurred while fetching feedback"}, 500
+        current_app.logger.error(f"Error fetching companies: {e}")
+        return {"error": "An error occurred while fetching companies"}, 500
 
 '''
 @feedback.route('/feedback', methods=['PUT'])
