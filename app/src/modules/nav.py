@@ -47,6 +47,16 @@ def ClassificationNav():
         "pages/13_Classification.py", label="Classification Demo", icon="🌺"
     )
 
+#### ------------------------ Co-Op Searcher Role ------------------------
+def SearcherPageNav():
+    st.sidebar.page_link("pages/100_CoOp_Searcher_Home.py", label="Co-Op Searcher", icon="🔍")
+
+
+#### ------------------------ Co Op Reviewer Role ------------------------
+def ReviewerPageNav():
+    st.sidebar.page_link("pages/200_CoOp_Reviewer_Home.py", label="Co-Op Reviewer", icon="📝")
+
+
 
 #### ------------------------ System Admin Role ------------------------
 def AdminPageNav():
@@ -81,10 +91,12 @@ def SideBarLinks(show_home=False):
             MapDemoNav()
 
         # If the user role is usaid worker, show the Api Testing page
-        if st.session_state["role"] == "usaid_worker":
-            PredictionNav()
-            ApiTestNav()
-            ClassificationNav()
+        if st.session_state["role"] == "Co-Op reviewer":
+            ReviewerPageNav()
+
+        # If the user role is usaid worker, show the Api Testing page
+        if st.session_state["role"] == "Co-Op searcher":
+            SearcherPageNav()
 
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state["role"] == "administrator":
