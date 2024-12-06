@@ -225,6 +225,43 @@ def add_review():
         print(traceback.format_exc())
         return jsonify({"error": error_message}), 500
 
+
+# Assuming `reviews` is your Blueprint for this module
+@reviews.route('/addComment', methods=['POST'])
+def add_comment():
+    comment_data = request.json
+    try:
+        # Get current timestamp for createdAt
+        current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        # Construct SQL query to insert the comment
+        query = """
+        INSERT INTO Comments (reviewID, userID, content, createdAt, likes)
+        VALUES (%s, %s, %s, %s, %s)
+        """
+        values = (
+            comment_data["reviewID"],  # Review ID to link the comment to
+            comment_data["userID"],   # User ID of the commenter
+            comment_data["content"],  # The comment text
+            current_time,             # Use the current timestamp for createdAt
+            0                         # Default likes to 0
+        )
+
+        # Execute the query
+        cursor = db.get_db().cursor()
+        cursor.execute(query, values)
+        db.get_db().commit()
+
+        # Return success response
+        return jsonify({"message": "Comment added successfully!"}), 201
+
+    except Exception as e:
+        # Handle errors and return an error response
+        error_message = str(e)
+        print("Error:", error_message)
+        print(traceback.format_exc())
+        return jsonify({"error": error_message}), 500
+
 # ------------------------------------------------------------
 # get product information about a specific product
 # notice that the route takes <id> and then you see id

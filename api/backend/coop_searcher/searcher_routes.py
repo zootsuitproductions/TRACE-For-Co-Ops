@@ -46,7 +46,14 @@ def get_reviews_for_company(company_name):
     query = '''
     SELECT 
         rv.content,
+        rv.publishedAt,
+        rv.userID,
+        rv.reviewID,
+        rv.views,
+        rv.likes,
+        rv.heading,
         r.roleName,
+        r.roleID,
         rv.reviewType
     FROM 
         Reviews rv
@@ -68,8 +75,15 @@ def get_reviews_for_company(company_name):
     results = [
         {
             "content": row["content"],
+            "heading": row["heading"],
             "roleName": row["roleName"],
-            "reviewType": row["reviewType"]
+            "reviewID": row["reviewID"],
+            "likes": row["likes"],
+            "views": row["views"],
+            "roleID": row["roleID"],
+            "publishedAt": row["publishedAt"],
+            "reviewType": row["reviewType"],
+            "userID": row["userID"]
         }
         for row in theData
     ]

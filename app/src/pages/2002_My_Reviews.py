@@ -45,6 +45,23 @@ def fetch_comments(review_id):
         logger.error(f"Failed to fetch comments for review {review_id}: {e}")
         return []
 
+# Function to add a comment to a review
+def add_comment(review_id, user_id, content):
+    try:
+        response = requests.post(
+            f"http://api:4000/r/addComment",
+            json={
+                "reviewID": review_id,
+                "userID": user_id,
+                "content": content,
+            },
+        )
+        response.raise_for_status()
+        return response.json()  # Assuming the API returns the created comment or success message
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to add comment to review {review_id}: {e}")
+        return None
+
 # If there are reviews, display them
 # Display the edit form for the currently selected review
 if "editing_review_id" not in st.session_state:
@@ -75,6 +92,26 @@ if reviews:
                 st.markdown("*No comments yet.*")
 
             
+            # Add a form to post a new comment
+            with st.form(key=f"add_comment_form_{review['reviewID']}"):
+                st.subheader("Add a Comment")
+                new_comment_content = st.text_area("Your Comment", key=f"comment_content_{review['reviewID']}")
+                submit_comment_button = st.form_submit_button(label="Post Comment")
+
+                if submit_comment_button and new_comment_content:
+                    user_id = st.session_state.get("id")  # Assuming user ID is stored in session state
+                    comment_response = add_comment(review['reviewID'], user_id, new_comment_content)
+                    if comment_response:
+                        st.success("Comment added successfully!")
+                        # Optionally refresh comments
+                        comments.append({
+                            "userID": user_id,
+                            "content": new_comment_content,
+                            "likes": 0,
+                        })
+                    else:
+                        st.error("Failed to post comment. Please try again.")
+
 
             # Display the edit button
             edit_button = st.button(
