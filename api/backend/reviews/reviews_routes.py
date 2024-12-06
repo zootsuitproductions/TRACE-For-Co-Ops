@@ -16,6 +16,42 @@ from datetime import datetime
 # Create a new Blueprint object, which is a collection of 
 # routes.
 reviews = Blueprint('reviews', __name__)
+@reviews.route('/reviews', methods=['GET'])
+def get_reviews():
+    try:
+        with db.get_db().cursor() as cursor:
+            cursor.execute('''
+                SELECT *
+                FROM Reviews;
+            ''')
+            theData = cursor.fetchall()
+
+        the_response = make_response(jsonify(theData))
+        the_response.status_code = 200
+        return the_response
+
+    except Exception as e:
+        current_app.logger.error(f"Error fetching reviews: {e}")
+        return {"error": "An error occurred while fetching reviews"}, 500
+
+@reviews.route('/comments', methods=['GET'])
+def get_comments():
+    try:
+        with db.get_db().cursor() as cursor:
+            cursor.execute('''
+                SELECT *
+                FROM Comments
+                WHERE isFlagged = TRUE;
+            ''')
+            theData = cursor.fetchall()
+
+        the_response = make_response(jsonify(theData))
+        the_response.status_code = 200
+        return the_response
+
+    except Exception as e:
+        current_app.logger.error(f"Error fetching comments: {e}")
+        return {"error": "An error occurred while fetching comments"}, 500
 
 @reviews.route('/flagged', methods=['GET'])
 def get_flaggedreview():
@@ -148,6 +184,7 @@ def remove_flaggedreview():
     finally:
         if cursor is not None:
             cursor.close()
+
 
 @reviews.route('/submitReview', methods=['POST'])
 def add_review():

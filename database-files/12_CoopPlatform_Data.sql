@@ -296,12 +296,12 @@ INSERT INTO Comments (reviewID, userID, parentCommentID, content, likes, isFlagg
 (2, 4, NULL, 'Do you think the communication issue is company-wide?', 8, FALSE),
 (2, 1, 4, 'Yes, I think it varies by team, but it’s something to improve.', 6, FALSE),
 (3, 5, NULL, 'Aerospace is such an exciting field. How was the workload?', 12, FALSE),
-(4, 6, NULL, 'I’ve been considering applying here. Any tips for getting in?', 15, FALSE),
+(4, 6, NULL, 'I’ve been considering applying here. Any tips for getting in?', 15, TRUE),
 (4, 2, 6, 'Focus on renewable energy projects in your portfolio.', 7, FALSE),
 (5, 7, NULL, 'I love collaborative environments. Sounds like a great role.', 4, FALSE),
 (6, 8, NULL, 'Heavy workloads can be tough. Was the management supportive?', 9, FALSE),
-(6, 9, 8, 'They were supportive but often stretched thin.', 3, FALSE),
-(7, 10, NULL, 'Smart cities are the future. How innovative were the projects?', 13, FALSE),
+(6, 9, 8, 'They were supportive but often stretched thin.', 3, TRUE),
+(7, 10, NULL, 'Smart cities are the future. How innovative were the projects?', 13, TRUE),
 (8, 11, NULL, 'What kind of growth opportunities were you hoping for?', 6, FALSE),
 (8, 3, 11, 'Leadership roles or cross-functional projects.', 4, FALSE),
 (9, 12, NULL, 'Tech companies often have dynamic environments. Did you feel valued?', 11, FALSE),
@@ -313,14 +313,14 @@ INSERT INTO Comments (reviewID, userID, parentCommentID, content, likes, isFlagg
 (14, 18, NULL, 'How innovative was the genetic research you were involved in?', 20, FALSE),
 (14, 19, 18, 'Very cutting-edge, especially in CRISPR technology.', 12, FALSE),
 (15, 20, NULL, 'Efficient logistics management is key to success.', 9, FALSE),
-(16, 21, NULL, 'What kind of tools were used for cybersecurity?', 11, FALSE),
+(16, 21, NULL, 'What kind of tools were used for cybersecurity?', 11, TRUE),
 (16, 22, 21, 'Mostly Splunk, Wireshark, and custom tools.', 5, FALSE),
 (17, 23, NULL, 'Tight deadlines can be tough. How was the work-life balance?', 7, FALSE),
-(18, 24, NULL, 'Eco-friendly construction is inspiring. What projects stood out?', 14, FALSE),
+(18, 24, NULL, 'Eco-friendly construction is inspiring. What projects stood out?', 14, TRUE),
 (19, 25, NULL, 'VR development is fascinating. What applications did you focus on?', 17, FALSE),
 (19, 26, 25, 'Medical training simulations. Very impactful.', 10, FALSE),
-(20, 27, NULL, 'Gourmet food development sounds interesting! How creative was it?', 8, FALSE),
-(21, 28, NULL, 'Interior design is so rewarding. What was your favorite project?', 13, FALSE);
+(20, 27, NULL, 'Gourmet food development sounds interesting! How creative was it?', 8, TRUE),
+(21, 28, NULL, 'Interior design is so rewarding. What was your favorite project?', 13, TRUE);
 
 
 INSERT INTO Badges (badgeName) VALUES

@@ -34,14 +34,6 @@ if "History" not in st.session_state:
 if "timestamp" not in st.session_state:
     st.session_state.timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-# Function to log actions
-def log_action(reviewID, action, reason=None):
-    for i in range(len(st.session_state.reviews)):
-        review = st.session_state.reviews.iloc[i]
-        if review["reviewID"] == reviewID:
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            #Hstory[reviewID] = {"Action": action, "Reason": reason, "Timestamp": timestamp}
-
 # Streamlit app
 st.title("Flagged Posts Review Interface")
 
