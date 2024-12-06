@@ -17,6 +17,138 @@ from datetime import datetime
 # routes.
 reviews = Blueprint('reviews', __name__)
 
+@reviews.route('/flagged', methods=['GET'])
+def get_flaggedreview():
+    try:
+        with db.get_db().cursor() as cursor:
+            cursor.execute('''
+                SELECT reviewID, reviewType, heading, content
+                FROM Reviews
+                WHERE  isFlagged = TRUE;
+            ''')
+            theData = cursor.fetchall()
+
+        the_response = make_response(jsonify(theData))
+        the_response.status_code = 200
+        return the_response
+
+    except Exception as e:
+        current_app.logger.error(f"Error fetching flagged reviewss: {e}")
+        return {"error": "An error occurred while fetching flagged reviews"}, 500
+    
+@reviews.route('/approveflagged', methods=['PUT'])
+def approve_flaggedreview():
+    current_app.logger.info('PUT /reviews route')
+    try:
+        review_info = request.json
+
+        if 'reviewID' not in review_info or 'isFlagged' not in review_info:
+            return {'error': 'Missing reviewID or isFlagged'}, 400
+
+        review_id = review_info['reviewID']
+        if_flagged = review_info['isFlagged']
+        
+        
+        query = '''
+        UPDATE Reviews
+        SET isFlagged = %s
+        WHERE reviewID= %s;
+        '''
+        
+        data = (if_flagged, review_id)
+
+        cursor = db.get_db().cursor()
+        cursor.execute(query, data)
+        db.get_db().commit()
+
+        return {'message': 'Reviews status updated successfully'}, 200
+
+    except KeyError as e:
+        current_app.logger.error(f"Missing key in request JSON: {str(e)}")
+        return {'error': f'Missing key: {str(e)}'}, 400
+    except Exception as e:
+        current_app.logger.error(f"Error updating reviews: {str(e)}")
+        return {'error': 'An error occurred while updating reviews status'}, 500
+    finally:
+        if 'cursor' in locals() and cursor:
+            cursor.close()   
+
+@reviews.route('/editflagged', methods=['PUT'])
+def edit_flaggedreview():
+    current_app.logger.info('PUT /reviews route')
+    try:
+        review_info = request.json
+
+        if 'reviewID' not in review_info or 'content' not in review_info:
+            return {'error': 'Missing reviewID or content'}, 400
+
+        review_id = review_info['reviewID']
+        content = review_info['content']
+        
+        
+        query = '''
+        UPDATE Reviews
+        SET isFlagged = FALSE,
+            content = %s
+        WHERE reviewID= %s;
+        '''
+        
+        data = (content, review_id)
+
+        cursor = db.get_db().cursor()
+        cursor.execute(query, data)
+        db.get_db().commit()
+
+        return {'message': 'Reviews status updated successfully'}, 200
+
+    except KeyError as e:
+        current_app.logger.error(f"Missing key in request JSON: {str(e)}")
+        return {'error': f'Missing key: {str(e)}'}, 400
+    except Exception as e:
+        current_app.logger.error(f"Error updating reviews: {str(e)}")
+        return {'error': 'An error occurred while updating reviews status'}, 500
+    finally:
+        if 'cursor' in locals() and cursor:
+            cursor.close()   
+            
+@reviews.route('/removeflagged', methods=['DELETE'])
+def remove_flaggedreview():
+    current_app.logger.info('DELETE /removeflagged route')
+    try:
+        review_info = request.json
+
+        if 'reviewID' not in review_info:
+            return {'error': 'Missing reviewID'}, 400
+
+        review_id = review_info['reviewID']
+
+        try:
+            review_id = int(review_id)
+        except ValueError:
+            return {'error': 'Invalid reviewID format'}, 400
+
+        query = '''
+        DELETE FROM Reviews
+        WHERE reviewID = %s;
+        '''
+        data = (review_id,)
+
+        cursor = db.get_db().cursor()
+        cursor.execute(query, data)
+        db.get_db().commit()
+
+        return {'message': 'Review deleted successfully'}, 200
+
+    except KeyError as e:
+        current_app.logger.error(f"Missing key in request JSON: {str(e)}")
+        return {'error': f'Missing key: {str(e)}'}, 400
+    except Exception as e:
+        current_app.logger.error(f"Error deleting review: {str(e)}")
+        return {'error': 'An error occurred while deleting the review.'}, 500
+    finally:
+        if cursor is not None:
+            cursor.close()
+
 @reviews.route('/submitReview', methods=['POST'])
 def add_review():
     review_data = request.json
