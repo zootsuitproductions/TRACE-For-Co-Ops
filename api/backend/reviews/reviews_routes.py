@@ -10,11 +10,51 @@ from flask import make_response
 from flask import current_app
 from backend.db_connection import db
 
+from datetime import datetime
+
 #------------------------------------------------------------
 # Create a new Blueprint object, which is a collection of 
 # routes.
 reviews = Blueprint('reviews', __name__)
 
+@reviews.route('/submitReview', methods=['POST'])
+def add_review():
+    review_data = request.json
+    try:
+        # Get current timestamp for publishedAt
+        current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        # Construct SQL query to insert the review
+        query = """
+        INSERT INTO Reviews (userID, roleID, publishedAt, reviewType, heading, content, views, likes, isFlagged)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        values = (
+            review_data["userID"],
+            review_data["roleID"],
+            current_time,  # Use the current timestamp for publishedAt
+            review_data["reviewType"],
+            review_data["heading"],
+            review_data["content"],
+            0,  # Default views
+            0,  # Default likes
+            False  # Default isFlagged
+        )
+
+        # Execute the query
+        cursor = db.get_db().cursor()
+        cursor.execute(query, values)
+        db.get_db().commit()
+
+        # Return success response
+        return jsonify({"message": "Review added successfully!"}), 201
+
+    except Exception as e:
+        # Handle errors and return an error response
+        error_message = str(e)
+        print("Error:", error_message)
+        print(traceback.format_exc())
+        return jsonify({"error": error_message}), 500
 
 # ------------------------------------------------------------
 # get product information about a specific product
@@ -54,6 +94,142 @@ WHERE
     response.status_code = 200
     return response
 
+@reviews.route('/roleDetails/<role_id>', methods=['GET'])
+def get_role_details(role_id):
+    query = f'''
+        SELECT 
+            r.roleName, 
+            c.name
+        FROM 
+            Role r
+        JOIN 
+            Companies c ON r.companyID = c.companyID
+        WHERE 
+            r.roleID = {str(role_id)};
+    '''
+    
+    # Get the database connection, execute the query, and fetch the results as a Python Dictionary
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    role_data = cursor.fetchone()  # Assuming the result is a single row
+    
+    # If no result is found
+    if not role_data:
+        return jsonify({'error': 'Role not found'}), 404
+    
+    response = {
+        'roleName': role_data['roleName'],
+        'companyName': role_data['name']
+    }
+    
+    return make_response(jsonify(response), 200)
+
+@reviews.route('/companies', methods=['GET'])
+def get_companies():
+    query = '''
+        SELECT 
+            c.companyID,
+            c.name AS company_name,
+            c.description AS company_description,
+            c.createdAt AS company_createdAt,
+            c.updatedAt AS company_updatedAt
+        FROM 
+            Companies c
+    '''
+     # Execute the query
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+@reviews.route('/rolesByCompany/<int:company_id>', methods=['GET'])
+def get_roles_by_company(company_id):
+    query = f'''
+        SELECT 
+            r.roleID,
+            r.roleName,
+            r.description AS role_description,
+            r.skillsRequired,
+            c.name AS company_name,
+            c.description AS company_description,
+            c.createdAt AS company_createdAt,
+            c.updatedAt AS company_updatedAt
+        FROM 
+            Role r
+        JOIN 
+            Companies c ON r.companyID = c.companyID
+        WHERE 
+            r.companyID = {company_id};
+    '''
+    
+    # Get the database connection, execute the query, and fetch the results as a Python Dictionary
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    # Create the response
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+
+
+@reviews.route('/commentsByReview/<reviewID>', methods=['GET'])
+def get_comments_by_review(reviewID):
+    query = f'''
+        SELECT 
+            c.commentID,
+            c.userID,
+            c.parentCommentID,
+            c.createdAt,
+            c.content,
+            c.likes
+        FROM 
+            Comments c
+        WHERE 
+            c.reviewID = {str(reviewID)}
+        ORDER BY 
+            c.createdAt ASC;
+    '''
+    
+    # Get the database connection, execute the query, and 
+    # fetch the results as a Python Dictionary
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+@reviews.route('/updateReview', methods=['PUT'])
+def update_review():
+    data = request.get_json()
+    
+    reviewID = data.get('reviewID')
+    heading = data.get('heading')
+    content = data.get('content')
+    reviewType = data.get('reviewType')
+    
+    query = '''
+        UPDATE Reviews
+        SET heading = %s, content = %s, reviewType = %s
+        WHERE reviewID = %s;
+    '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (heading, content, reviewType, reviewID))
+    db.get_db().commit()
+
+    response = make_response(jsonify({"message": "Review updated successfully"}))
+    response.status_code = 200
+    return response
+
+    
 
 #------------------------------------------------------------
 # Get all the products from the database, package them up,

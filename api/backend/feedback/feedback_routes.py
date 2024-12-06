@@ -74,4 +74,3 @@ def update_status():
         if 'cursor' in locals() and cursor:
             cursor.close()
     
-

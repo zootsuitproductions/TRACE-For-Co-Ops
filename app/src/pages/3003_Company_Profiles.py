@@ -173,3 +173,4 @@ if st.session_state.ssh:
     st.success("Company details updated successfully!")
     st.subheader("Updated Company Data")
     st.dataframe(st.session_state.company_df)
+
