@@ -227,7 +227,7 @@ INSERT INTO Role (companyID, locationID, roleName, description, skillsRequired) 
 (30, 30, 'Quantum Computing Researcher', 'Research and develop quantum computing applications.', 'Quantum Mechanics, Algorithms');
 
 INSERT INTO Reviews (userID, roleID, publishedAt, reviewType, heading, content, views, likes, isFlagged) VALUES
-(1, 1, '2024-01-01 10:00:00', 'Experience', 'Great Experience as an ML Engineer', 'I had a fantastic experience working as a Machine Learning Engineer at TechNova Inc. Learned a lot about AI.', 150, 35, FALSE),
+(1, 1, '2024-01-01 10:00:00', 'InterviewReport', 'Tricky questions about Python', 'It was so hard to figure out their python related questions.', 150, 35, FALSE),
 (2, 2, '2024-01-05 15:30:00', 'Feedback', 'Improved Sustainability Practices', 'The company is making significant strides in sustainability, but communication needs improvement.', 100, 20, FALSE),
 (3, 3, '2024-01-10 09:45:00', 'Review', 'Exciting Role in Aerospace', 'Working on cutting-edge technology was inspiring. Would recommend it to any aspiring engineer.', 200, 50, FALSE),
 (4, 4, '2024-01-15 14:20:00', 'Insight', 'Great Opportunity in Renewable Energy', 'A rewarding experience with excellent leadership and vision.', 120, 25, FALSE),
@@ -256,13 +256,38 @@ INSERT INTO Reviews (userID, roleID, publishedAt, reviewType, heading, content, 
 (27, 27, '2024-05-05 11:30:00', 'Review', 'Innovative Cloud Technologies', 'Great workplace for cloud engineers.', 125, 30, FALSE),
 (28, 28, '2024-05-10 14:15:00', 'Insight', 'Artisan Product Design', 'Creative work with room for growth.', 95, 12, FALSE),
 (29, 29, '2024-05-15 10:00:00', 'Experience', 'Efficient E-commerce Operations', 'Fast-paced environment with rewarding challenges.', 80, 18, FALSE),
-(30, 30, '2024-05-20 15:00:00', 'Feedback', 'Quantum Computing Innovations', 'Fascinating projects but steep learning curve.', 145, 28, FALSE),
-(31, 31, '2024-05-25 08:30:00', 'Interview Report', 'Interview Process at TechNova', 'The interview process was thorough with multiple technical rounds focusing on problem-solving and machine learning concepts. The final interview involved a coding challenge and a behavioral round.', 200, 45, FALSE),
-(32, 32, '2024-05-28 09:00:00', 'Interview Report', 'Interview Process at GreenTech Solutions', 'Had a great experience during the interview process. It started with an initial screening, followed by two technical rounds. The interviewers were friendly, but the technical assessment was quite challenging.', 150, 30, FALSE),
-(33, 33, '2024-06-01 10:15:00', 'Interview Report', 'Interview Process at SpaceX', 'The interview process was intense. First, a phone interview to discuss previous projects, then an onsite with coding exercises, and finally a behavioral interview to assess cultural fit. They were very focused on problem-solving skills.', 250, 55, FALSE),
-(34, 34, '2024-06-05 13:00:00', 'Interview Report', 'Interview Process at Innovate Labs', 'The process included a 30-minute phone interview, followed by a technical test with algorithmic problems. I was impressed by the professionalism of the team and the quick turnaround time.', 180, 40, FALSE),
-(35, 35, '2024-06-10 14:45:00', 'Interview Report', 'Interview Process at BioHealth Solutions', 'The interview process was well-structured. The first stage was a video interview with HR, followed by a second-stage technical interview where I was asked to solve coding problems related to healthcare technology.', 220, 50, FALSE);
+(30, 30, '2024-05-20 15:00:00', 'Feedback', 'Quantum Computing Innovations', 'Fascinating projects but steep learning curve.', 145, 28, FALSE);
 
+INSERT INTO Reviews (userID, roleID, publishedAt, reviewType, heading, content, views, likes, isFlagged) VALUES
+(2, 1, '2024-01-05 15:30:00', 'InterviewReport', 'Machine Learning Frameworks', 'They grilled me on machine learning frameworks like TensorFlow and PyTorch. Be ready for some deep technical discussions.', 130, 40, FALSE),
+(3, 2, '2024-01-10 09:45:00', 'InterviewReport', 'Sustainability Practices in Agriculture', 'Expect detailed questions on sustainable farming techniques. They tested my knowledge of real-world agricultural challenges.', 180, 50, FALSE),
+(4, 2, '2024-01-15 14:20:00', 'InterviewReport', 'Sustainability Metrics', 'They focused on sustainability metrics and how I would apply them to optimize farming practices.', 120, 30, FALSE),
+(5, 3, '2024-01-20 11:10:00', 'InterviewReport', 'Aerospace Engineering Concepts', 'Be prepared for questions on spacecraft propulsion and satellite design. Technical, but stimulating!', 160, 45, FALSE),
+(6, 3, '2024-01-25 17:00:00', 'InterviewReport', 'Advanced Aerospace Technology', 'They asked about advanced aerospace technologies and how I would improve existing designs.', 150, 40, FALSE),
+(7, 4, '2024-02-01 08:00:00', 'InterviewReport', 'Renewable Energy Challenges', 'They asked about the challenges in renewable energy, especially regarding solar technology. Make sure to know your data.', 140, 38, FALSE),
+(8, 4, '2024-02-05 10:30:00', 'InterviewReport', 'Solar Energy Design', 'The interview focused on solar energy design and real-life applications of green energy.', 110, 28, FALSE),
+(9, 5, '2024-02-10 13:15:00', 'InterviewReport', 'Curriculum Design in Education', 'They asked how to design curricula for diverse learners, focusing on interactive learning strategies.', 180, 50, FALSE),
+(10, 6, '2024-02-15 16:45:00', 'InterviewReport', 'Educational Content Challenges', 'Expect questions about educational content development under time constraints and adapting materials to different learning styles.', 140, 35, FALSE),
+(11, 7, '2024-02-20 19:20:00', 'InterviewReport', 'Clinical Trials and Data Analysis', 'The focus was on clinical trial design, including statistical methods and data analysis challenges.', 200, 55, FALSE),
+(12, 6, '2024-02-25 07:30:00', 'InterviewReport', 'Pharmaceutical Research Experience', 'Expect to discuss your past experience in pharmaceutical research, including data-driven decision making.', 170, 45, FALSE),
+(13, 7, '2024-03-01 11:50:00', 'InterviewReport', 'Urban Development Strategies', 'They asked about sustainable urban development strategies and smart city concepts.', 150, 38, FALSE),
+(14, 8, '2024-03-05 09:40:00', 'InterviewReport', 'Smart City Design', 'Expect to discuss your approach to designing smart city infrastructures, focusing on technological integration.', 140, 35, FALSE),
+(15, 9, '2024-03-10 12:25:00', 'InterviewReport', 'Water Purification Systems', 'They asked about advanced water purification technologies and challenges in real-world applications.', 130, 33, FALSE),
+(16, 10, '2024-03-15 14:00:00', 'InterviewReport', 'Water Systems Engineering Problems', 'The interview involved real-life engineering problems related to water desalination and purification.', 120, 30, FALSE),
+(17, 11, '2024-03-20 15:30:00', 'InterviewReport', 'Software Development Process', 'The interview focused on software development methodologies and tools, including problem-solving during live coding challenges.', 200, 55, FALSE),
+(18, 12, '2024-03-25 16:45:00', 'InterviewReport', 'Coding Challenges in Software Engineering', 'Expect live coding challenges focusing on algorithms, data structures, and system design.', 180, 50, FALSE),
+(19, 13, '2024-03-30 10:10:00', 'InterviewReport', 'Creative Video Production', 'Expect questions on how to manage video projects from pre-production to distribution.', 140, 38, FALSE),
+(20, 14, '2024-04-01 13:00:00', 'InterviewReport', 'Creative Content Production Techniques', 'They wanted to know my approach to creative video production, including time management and collaborating with teams under tight deadlines.', 130, 35, FALSE),
+(21, 15, '2024-04-05 14:30:00', 'InterviewReport', 'Robotics Engineering Solutions', 'They focused on advanced robotics engineering, including the integration of AI into robotic systems.', 190, 50, FALSE),
+(22, 15, '2024-04-10 09:15:00', 'InterviewReport', 'Robotics Project Management', 'Expect questions on managing large-scale robotics projects, especially in an industrial setting.', 180, 48, FALSE),
+(23, 16, '2024-04-15 10:45:00', 'InterviewReport', 'Financial Modeling Techniques', 'Expect in-depth questions about financial modeling, with a focus on real-world applications in the financial sector.', 170, 45, FALSE),
+(24, 16, '2024-04-20 11:30:00', 'InterviewReport', 'Advanced Financial Analysis', 'They asked me to walk through complex financial analysis and forecasting techniques under tight deadlines.', 160, 42, FALSE),
+(25, 17, '2024-04-25 16:00:00', 'InterviewReport', 'Automotive Engineering Challenges', 'The interview focused on automotive systems design and innovative testing methods.', 150, 40, FALSE),
+(26, 18, '2024-04-30 09:40:00', 'InterviewReport', 'Vehicle System Design', 'They asked about the design of autonomous vehicle systems and the technologies driving them.', 140, 38, FALSE),
+(27, 18, '2024-05-05 11:30:00', 'InterviewReport', 'Biotechnology Research and Development', 'Expect to discuss biotechnology innovations, particularly in gene editing and CRISPR technology.', 160, 45, FALSE),
+(28, 19, '2024-05-10 14:15:00', 'InterviewReport', 'Innovations in Genetic Engineering', 'I had to talk about the latest advancements in genetic engineering and their real-world applications.', 170, 50, FALSE),
+(29, 20, '2024-05-15 10:00:00', 'InterviewReport', 'Logistics and Supply Chain Optimization', 'Expect to be questioned on logistics challenges and supply chain optimization techniques under pressure.', 130, 35, FALSE),
+(30, 21, '2024-05-20 15:00:00', 'InterviewReport', 'Supply Chain Process Optimization', 'They asked how I would optimize supply chain processes and improve operational efficiency.', 140, 38, FALSE);
 
 INSERT INTO Comments (reviewID, userID, parentCommentID, content, likes, isFlagged) VALUES
 (1, 2, NULL, 'This sounds like a fantastic experience! Thanks for sharing.', 10, FALSE),

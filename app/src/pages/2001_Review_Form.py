@@ -82,7 +82,7 @@ if companies:
 
             new_heading = st.text_input("Review Heading")
             new_content = st.text_area("Content")
-            new_review_type = st.selectbox("Review Type", ["Experience", "Feedback", "Other"])
+            new_review_type = st.selectbox("Review Type", ["Experience", "InterviewReport", "Feedback", "Other"])
 
             submit_button = st.form_submit_button("Submit Review")
 

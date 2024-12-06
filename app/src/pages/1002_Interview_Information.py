@@ -22,7 +22,7 @@ company_names = [item["CompanyName"] for item in results]
 selected_company = st.selectbox("Select a Company:", company_names)
 
 # Fetch the reviews for the selected company by company name
-reviews = requests.get(f'http://api:4000/s/reviewsForCompany/{selected_company}').json()
+reviews = requests.get(f'http://api:4000/s/interviewReportsForCompany/{selected_company}').json()
 
 # Display the reviews if available
 if reviews:
@@ -30,4 +30,4 @@ if reviews:
     # Display reviews in a table format
     st.dataframe(reviews)
 else:
-    st.write("No reviews available for this company.")
+    st.write("No interview feedback available for this company.")

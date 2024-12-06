@@ -44,16 +44,49 @@ def get_reviews_for_company(company_name):
 
     # Use parameterized query to prevent SQL injection
     query = '''
-        SELECT 
-            rv.content
-        FROM 
-            Reviews rv
-        JOIN 
-            Role r ON rv.roleID = r.roleID
-        JOIN 
-            Companies c ON r.companyID = c.companyID
-        WHERE 
-            c.name = %s;
+    SELECT 
+        rv.content
+    FROM 
+        Reviews rv
+    JOIN 
+        Role r ON rv.roleID = r.roleID
+    JOIN 
+        Companies c ON r.companyID = c.companyID
+    WHERE 
+        c.name = %s
+
+    '''
+    
+    # get the database connection, execute the query, and 
+    # fetch the results as a Python Dictionary
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (company_name,))  # Passing company_name as a parameter
+    theData = cursor.fetchall()
+    
+    # Make the response
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+# Get reviews for a specific company
+@searcher.route('/interviewReportsForCompany/<company_name>', methods=['GET'])
+def get_interview_reports_for_company(company_name):
+
+    # Use parameterized query to prevent SQL injection
+    query = '''
+    SELECT 
+        rv.content
+    FROM 
+        Reviews rv
+    JOIN 
+        Role r ON rv.roleID = r.roleID
+    JOIN 
+        Companies c ON r.companyID = c.companyID
+    WHERE 
+        c.name = %s
+        AND
+        rv.reviewType = 'InterviewReport'
+
     '''
     
     # get the database connection, execute the query, and 
