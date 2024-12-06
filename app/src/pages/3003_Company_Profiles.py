@@ -1,9 +1,10 @@
 import logging
 logger = logging.getLogger(__name__)
+import datetime as dt
 import pandas as pd
+import requests
 import streamlit as st
 from streamlit_extras.app_logo import add_logo
-import world_bank_data as wb
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.express as px
@@ -18,24 +19,93 @@ st.header('Edit and Updata Company Files')
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
 
-# get the countries from the world bank data
-with st.echo(code_location='above'):
-    countries:pd.DataFrame = wb.get_countries()
-   
-    st.dataframe(countries)
 
-# the with statment shows the code for this block above it 
-with st.echo(code_location='above'):
-    arr = np.random.normal(1, 1, size=100)
-    test_plot, ax = plt.subplots()
-    ax.hist(arr, bins=20)
+# get the feedbacks
+try:
+    companies = requests.get("http://api:4000/c/companies").json()
+except:
+    st.write("Could not to conncet to database to get companies and roles")
+    
+# Save DataFrame in session state
+if "companies_df" not in st.session_state:
+    st.session_state.companies_df = pd.DataFrame(companies)
 
-    st.pyplot(test_plot)
+# Title
+st.title("Company and Role Manager")
+
+# Filter settings
+st.subheader("Filter and Highlight Options")
+filter_by_time = st.checkbox("Filter by Last Updated Time", value=False)
+highlight_missing = st.checkbox("Highlight Missing or Outdated Data", value=True)
+
+# Time filter input
+if filter_by_time:
+    time_threshold = st.date_input(
+        "Show records updated after:", dt.date(2024, 1, 1)
+    )
+    # Convert to datetime for comparison
+    time_threshold = dt.datetime.combine(time_threshold, dt.datetime.min.time())
 
 
-with st.echo(code_location='above'):
-    slim_countries = countries[countries['incomeLevel'] != 'Aggregates']
-    data_crosstab = pd.crosstab(slim_countries['region'], 
-                                slim_countries['incomeLevel'],  
-                                margins = False) 
-    st.table(data_crosstab)
+company_df = st.session_state.companies_df.copy()
+st.dataframe(company_df)
+display_columns = ["status", "feedbackID", "userID", "timestamp", "header", "content"]
+company_df = company_df[display_columns]
+
+
+# Apply filters and highlights
+if filter_by_time:
+    company_df = company_df[company_df["LastUpdated"] > time_threshold]
+
+if highlight_missing:
+    def highlight_conditions(row):
+        if row["Status"] in ["Missing Data", "Outdated"]:
+            return ["background-color: yellow"] * len(row)
+        return [""] * len(row)
+
+    styled_df = company_df.style.apply(highlight_conditions, axis=1)
+    st.dataframe(styled_df)
+else:
+    st.dataframe(company_df)
+
+'''
+# Update or edit company profiles
+st.subheader("Edit or Update Company Profiles")
+company_id = st.selectbox("Select Company ID to Edit", company_df["CompanyID"])
+
+# Fetch selected company data
+selected_company = company_df[company_df["CompanyID"] == company_id].iloc[0]
+
+# Form for editing
+with st.form(key="edit_form"):
+    company_name = st.text_input("Company Name", selected_company["CompanyName"])
+    role = st.text_input("Role Description", selected_company["Role"])
+    interview_details = st.text_area(
+        "Interview Details", selected_company["InterviewDetails"]
+    )
+    submit_button = st.form_submit_button(label="Update Details")
+
+    if submit_button:
+        st.session_state.company_data.loc[
+            st.session_state.company_data["CompanyID"] == company_id, "CompanyName"
+        ] = company_name
+        st.session_state.company_data.loc[
+            st.session_state.company_data["CompanyID"] == company_id, "Role"
+        ] = role
+        st.session_state.company_data.loc[
+            st.session_state.company_data["CompanyID"] == company_id, "InterviewDetails"
+        ] = interview_details
+        st.session_state.company_data.loc[
+            st.session_state.company_data["CompanyID"] == company_id, "LastUpdated"
+        ] = dt.datetime.now()
+        st.session_state.company_data.loc[
+            st.session_state.company_data["CompanyID"] == company_id, "Status"
+        ] = "Complete" if role and interview_details else "Missing Data"
+
+        st.success("Company details updated successfully!")
+
+# Display updated data
+st.subheader("Updated Company Data")
+updated_company_df = st.session_state.company_data.copy()
+st.dataframe(updated_company_df)
+'''

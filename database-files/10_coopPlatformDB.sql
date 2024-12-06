@@ -24,7 +24,9 @@ CREATE TABLE IF NOT EXISTS User (
 CREATE TABLE IF NOT EXISTS Companies (
    companyID INT AUTO_INCREMENT PRIMARY KEY,
    name VARCHAR(100),
-   description TEXT
+   description TEXT,
+   createdAt DATETIME,
+   updatedAT DATETIME
 );
 
 
