@@ -375,6 +375,35 @@ def get_comments_by_review(reviewID):
     response.status_code = 200
     return response
 
+@reviews.route('/deleteReview/<int:review_id>', methods=['DELETE'])
+def delete_review(review_id):
+    try:
+        # Define the query to delete the review
+        query = f'''
+            DELETE FROM Reviews
+            WHERE reviewID = {review_id};
+        '''
+
+        # Get the database connection and execute the query
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        db.get_db().commit()
+
+        # Check if any row was affected (deleted)
+        if cursor.rowcount > 0:
+            response = make_response(jsonify({"message": "Review deleted successfully"}))
+            response.status_code = 200
+        else:
+            response = make_response(jsonify({"message": "Review not found"}))
+            response.status_code = 404
+    except Exception as e:
+        # Log the exception and return a 500 error
+        logger.error(f"Error deleting review: {e}")
+        response = make_response(jsonify({"message": "Internal Server Error", "error": str(e)}))
+        response.status_code = 500
+
+    return response
+
 @reviews.route('/updateReview', methods=['PUT'])
 def update_review():
     data = request.get_json()
@@ -382,16 +411,17 @@ def update_review():
     reviewID = data.get('reviewID')
     heading = data.get('heading')
     content = data.get('content')
-    reviewType = data.get('reviewType')
+
+    print("NEW CONTENT: ", content)
     
     query = '''
         UPDATE Reviews
-        SET heading = %s, content = %s, reviewType = %s
+        SET heading = %s, content = %s
         WHERE reviewID = %s;
     '''
     
     cursor = db.get_db().cursor()
-    cursor.execute(query, (heading, content, reviewType, reviewID))
+    cursor.execute(query, (heading, content, reviewID))
     db.get_db().commit()
 
     response = make_response(jsonify({"message": "Review updated successfully"}))

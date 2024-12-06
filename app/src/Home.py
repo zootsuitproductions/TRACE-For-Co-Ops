@@ -59,6 +59,8 @@ if st.button('Act as Riley, a student Co-Op Reviewer',
     st.session_state['role'] = 'Co-Op reviewer'
     st.session_state['id'] = '1'
     st.session_state['first_name'] = 'Riley'
+
+    logger.info("Logging in as Co Op Reviewer")
     st.switch_page('pages/200_CoOp_Reviewer_Home.py')
 
 if st.button('Act as Alex Admin, System Administrator', 

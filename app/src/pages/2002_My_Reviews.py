@@ -15,9 +15,6 @@ SideBarLinks()
 # Set the header of the page
 st.header('My Reviews')
 
-# Display personalized greeting
-st.write(f"### Hi, {st.session_state['first_name']}!")
-
 # Fetch the user's reviews
 try:
     response = requests.get(f'http://api:4000/r/reviewsByUser/{st.session_state["id"]}')
@@ -49,20 +46,25 @@ def fetch_comments(review_id):
         return []
 
 # If there are reviews, display them
+# Display the edit form for the currently selected review
+if "editing_review_id" not in st.session_state:
+    st.session_state["editing_review_id"] = None
+
 if reviews:
-    st.subheader("Your Reviews")
     for review in reviews:
         with st.container():
             # Fetch role and company details
             role_name, company_name = fetch_role_and_company(review['roleID'])
 
             # Display review details
-            st.markdown(f"### {review['heading']} ({review['reviewType']})")
-            st.markdown(f"**Published At:** {review['publishedAt']}")
-            st.markdown(f"**Views:** {review['views']}  |  **Likes:** {review['likes']}")
+            st.markdown(f"### {review['reviewType']}")   # Review type in bold above the title
             st.markdown(f"**Role:** {role_name} at **{company_name}**")
-            st.markdown(f"**Content:** {review['content']}")
+            st.markdown(f"#### {review['heading']}") 
+            st.markdown(f"{review['content']}")
+            st.markdown(f"**Views:** {review['views']}  |  **Likes:** {review['likes']}")
+            
 
+            st.markdown(f"**Published At:** {review['publishedAt']}")
             # Fetch and display comments
             comments = fetch_comments(review['reviewID'])
             st.markdown("#### Comments:")
@@ -72,18 +74,26 @@ if reviews:
             else:
                 st.markdown("*No comments yet.*")
 
+            
+
             # Display the edit button
-            edit_button = st.button(f"Edit Review {review['reviewID']}")
+            edit_button = st.button(
+                f"Edit Review {review['reviewID']}",
+                key=f"edit_button_{review['reviewID']}"
+            )
 
             if edit_button:
-                # If the button is clicked, show the edit form
-                with st.form(key=f'edit_review_{review["reviewID"]}'):
+                # Set the review ID to session state for editing
+                st.session_state["editing_review_id"] = review["reviewID"]
+
+            # If this review is being edited, display the edit form
+            if st.session_state["editing_review_id"] == review["reviewID"]:
+                with st.form(key=f'edit_review_form_{review["reviewID"]}'):
                     st.subheader("Edit this Review")
 
                     # Pre-fill the form with the current review details
                     new_heading = st.text_input("Heading", value=review["heading"])
                     new_content = st.text_area("Content", value=review["content"])
-                    new_review_type = st.selectbox("Review Type", ["Experience", "Feedback", "Other"], index=["Experience", "Feedback", "Other"].index(review["reviewType"]))
 
                     submit_button = st.form_submit_button(label="Update Review")
 
@@ -93,15 +103,42 @@ if reviews:
                             "reviewID": review["reviewID"],
                             "heading": new_heading,
                             "content": new_content,
-                            "reviewType": new_review_type
                         }
 
                         try:
-                            update_response = requests.put(f'http://api:4000/r/updateReview', json=update_review_data)
+                            update_response = requests.put(
+                                f'http://api:4000/r/updateReview', 
+                                json=update_review_data
+                            )
                             update_response.raise_for_status()
                             st.success("Review updated successfully!")
+                            # Reset the editing state
+                            st.session_state["editing_review_id"] = None
                         except requests.exceptions.RequestException as e:
                             st.error(f"Failed to update review: {e}")
+
+                # Add a cancel button to stop editing
+                if st.button(f"Done {review['reviewID']}", key=f"cancel_button_{review['reviewID']}"):
+                    st.session_state["editing_review_id"] = None
+
+             # Add a Delete button
+            delete_button = st.button(f"Delete Review {review['reviewID']}", key=f"delete_button_{review['reviewID']}")
+            
+            if delete_button:
+                # Confirm deletion before making the API request
+                confirm_delete = "Delete"
+                
+                if confirm_delete == "Delete":
+                    try:
+                        delete_response = requests.delete(
+                            f'http://api:4000/r/deleteReview/{review["reviewID"]}'
+                        )
+                        delete_response.raise_for_status()
+                        st.success("Review deleted successfully!")
+                        # Optionally, refresh the page or remove the deleted review from the list
+                        reviews = [rev for rev in reviews if rev["reviewID"] != review["reviewID"]]
+                    except requests.exceptions.RequestException as e:
+                        st.error(f"Failed to delete review: {e}")
 
             st.markdown("---")
 else:
