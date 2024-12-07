@@ -1,3 +1,7 @@
+# video link
+https://drive.google.com/file/d/1L7Nu3Phfua9m765dMDErn2DCuctszMql/view?usp=drive_link 
+
+
 # COUPE: TRACE for Co-Ops
 
 COUPE is a data-driven platform designed to revolutionize the co-op search process for Northeastern University students by offering peer-to-peer insights into company experiences. Our mission is to provide students with transparent, verified, and meaningful reviews on workplace culture, roles, and interview processes to help them find their ideal co-op match.
