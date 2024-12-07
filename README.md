@@ -6,7 +6,6 @@ https://drive.google.com/file/d/1L7Nu3Phfua9m765dMDErn2DCuctszMql/view?usp=drive
 1. Clone this repository:  
    ```bash
    git clone https://github.com/zootsuitproductions/coupe.git
-   cd coupe
    docker compose up -d
 
 # COUPE: TRACE for Co-Ops
