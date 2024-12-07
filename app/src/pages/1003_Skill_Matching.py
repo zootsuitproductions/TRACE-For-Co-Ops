@@ -15,7 +15,6 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 
 # Fetch the list of possible skills from the API
 skills = requests.get("http://api:4000/s/possibleSkills").json()
-skills = sorted(skills)
 
 
 # Extract and split skillsRequired into a set of unique skills
