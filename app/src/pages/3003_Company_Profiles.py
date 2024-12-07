@@ -83,9 +83,6 @@ if highlight_missing:
 else:
     st.dataframe(company_df)
 
-st.subheader("Update Company Profiles")
-
-st.subheader("Delete Company Profiles")
 
 st.subheader("Edit Company Profiles")
 
