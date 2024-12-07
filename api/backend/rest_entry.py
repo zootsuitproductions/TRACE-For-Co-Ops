@@ -2,7 +2,6 @@ from flask import Flask
 
 from backend.db_connection import db
 from backend.reviews.reviews_routes import reviews
-from backend.simple.simple_routes import simple_routes
 from backend.companies.companies_routes import companies
 from backend.feedback.feedback_routes import feedback
 from backend.coop_searcher.searcher_routes import searcher
@@ -41,7 +40,7 @@ def create_app():
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
     app.logger.info('current_app(): registering blueprints with Flask app object.')   
-    app.register_blueprint(simple_routes)
+
     app.register_blueprint(companies,   url_prefix='/c')
     app.register_blueprint(feedback,    url_prefix='/f')
     app.register_blueprint(reviews,    url_prefix='/r')
