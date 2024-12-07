@@ -24,3 +24,7 @@ if st.button('View Feedback Data',
              use_container_width=True):
     st.switch_page('pages/4002_Feedback_Data.py')
 
+if st.button('View and Moderate Flagged Posts', 
+             type='primary', 
+             use_container_width=True):
+    st.switch_page('pages/3002_Flagged_Posts.py')
