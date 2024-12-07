@@ -174,3 +174,61 @@ def get_roles_for_skill(skill):
         # Log the error and return a 500 error response
         current_app.logger.error(f"Error fetching roles for skill {skill}: {e}")
         return make_response(jsonify({"error": "Database query failed"}), 500)
+
+
+# Increment likes for a specific review
+@searcher.route('/review/<int:review_id>/like', methods=['POST'])
+def like_review(review_id):
+    try:
+        # Query to increment the likes for the given review ID
+        query = '''
+            UPDATE Reviews
+            SET likes = likes + 1
+            WHERE reviewID = %s;
+        '''
+        
+        # Get the database connection and execute the query
+        cursor = db.get_db().cursor()
+        cursor.execute(query, (review_id,))
+        db.get_db().commit()
+        
+        # Check if any row was updated
+        if cursor.rowcount == 0:
+            return make_response(jsonify({"message": "Review not found"}), 404)
+        
+        # Return a success response
+        return make_response(jsonify({"message": "Review liked successfully!"}), 200)
+    
+    except Exception as e:
+        # Log the error and return a 500 error response
+        current_app.logger.error(f"Error liking review with ID {review_id}: {e}")
+        return make_response(jsonify({"error": "Database query failed"}), 500)
+
+
+# Flag a review
+@searcher.route('/review/<int:review_id>/flag', methods=['POST'])
+def flag_review(review_id):
+    try:
+        # Query to flag the review
+        query = '''
+            UPDATE Reviews
+            SET isFlagged = TRUE
+            WHERE reviewID = %s;
+        '''
+        
+        # Get the database connection and execute the query
+        cursor = db.get_db().cursor()
+        cursor.execute(query, (review_id,))
+        db.get_db().commit()
+        
+        # Check if any row was updated
+        if cursor.rowcount == 0:
+            return make_response(jsonify({"message": "Review not found"}), 404)
+        
+        # Return a success response
+        return make_response(jsonify({"message": "Review flagged successfully!"}), 200)
+    
+    except Exception as e:
+        # Log the error and return a 500 error response
+        current_app.logger.error(f"Error flagging review with ID {review_id}: {e}")
+        return make_response(jsonify({"error": "Database query failed"}), 500)

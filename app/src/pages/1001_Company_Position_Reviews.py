@@ -32,6 +32,26 @@ def add_comment(review_id, user_id, content):
         logger.error(f"Failed to add comment to review {review_id}: {e}")
         return None
 
+# Function to like a review
+def like_review(review_id):
+    try:
+        response = requests.post(f"http://api:4000/s/review/{review_id}/like")
+        response.raise_for_status()
+        return response.json()  # Assuming the API returns the updated likes count or success message
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to like review {review_id}: {e}")
+        return None
+
+# Function to flag a review
+def flag_review(review_id):
+    try:
+        response = requests.post(f"http://api:4000/s/review/{review_id}/flag")
+        response.raise_for_status()
+        return response.json()  # Assuming the API returns the success message
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to flag review {review_id}: {e}")
+        return None
+
 # Fetch companies with reviews
 try:
     results = requests.get('http://api:4000/s/companiesWithReviews').json()
@@ -65,6 +85,23 @@ if company_names:
                 st.write(f"**Heading:** {review['heading']}")
                 st.write(f"**Content:** {review['content']}")
                 st.write(f"**Views:** {review['views']} | **Likes:** {review['likes']}")
+
+                # Add a like button
+                if st.button(f"Like (Likes: {review['likes']})", key=f"like_button_{review['reviewID']}"):
+                    like_response = like_review(review['reviewID'])
+                    if like_response:
+                        st.success("Liked the review!")
+                    else:
+                        st.error("Failed to like the review. Please try again.")
+
+                # Add a flag button
+                if st.button(f"Flag this review", key=f"flag_button_{review['reviewID']}"):
+                    flag_response = flag_review(review['reviewID'])
+                    if flag_response:
+                        st.success("Review flagged successfully!")
+                    else:
+                        st.error("Failed to flag the review. Please try again.")
+                
                 st.write("---")
 
                 # Fetch comments for the current review
