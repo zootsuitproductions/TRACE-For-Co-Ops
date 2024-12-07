@@ -84,6 +84,6 @@ if st.button(
     use_container_width=True,
 ):
     st.session_state["authenticated"] = True
-    st.session_state["role"] = "administrator"
+    st.session_state["role"] = "analyst"
     st.session_state["first_name"] = "Annalise"
     st.switch_page("pages/400_Analyst_Home.py")
