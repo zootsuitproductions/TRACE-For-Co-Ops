@@ -2,6 +2,13 @@
 https://drive.google.com/file/d/1L7Nu3Phfua9m765dMDErn2DCuctszMql/view?usp=drive_link 
 
 
+## How to Run Locally
+1. Clone this repository:  
+   ```bash
+   git clone https://github.com/zootsuitproductions/coupe.git
+   cd coupe
+   docker compose up -d
+
 # COUPE: TRACE for Co-Ops
 
 COUPE is a data-driven platform designed to revolutionize the co-op search process for Northeastern University students by offering peer-to-peer insights into company experiences. Our mission is to provide students with transparent, verified, and meaningful reviews on workplace culture, roles, and interview processes to help them find their ideal co-op match.
@@ -49,12 +56,12 @@ The database consists of multiple interconnected tables, including:
 - **Comments:** Allows threaded discussions on reviews.  
 - **Badges:** Tracks user achievements and contributions.  
 
-For a complete SQL DDL script, refer to [schema.sql](#).
+
 
 ---
 
 ## REST API Endpoints
-Here is an example of the REST API matrix. For detailed documentation, refer to the `API_DOCS.md` in this repository.
+Here is an example of the REST API matrix. For detailed documentation
 
 | Resource             | GET                                       | POST                          | PUT                 | DELETE            |
 |----------------------|-------------------------------------------|-------------------------------|---------------------|-------------------|
@@ -79,13 +86,3 @@ Here is an example of the REST API matrix. For detailed documentation, refer to 
 
 ---
 
-##  Wireframes
-Wireframes for primary features, including the company culture overview and feedback submission forms, can be found in the `wireframes` directory.
-
----
-
-## How to Run Locally
-1. Clone this repository:  
-   ```bash
-   git clone https://github.com/zootsuitproductions/coupe.git
-   cd coupe
